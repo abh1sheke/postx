@@ -35,6 +35,6 @@ func main() {
 	fmt.Printf(
 		"took %vms to make %v requests.\n",
 		endTime-startTime,
-		*args.Repeat*len(resultMutex.Result),
+		len(resultMutex.Result),
 	)
 }
