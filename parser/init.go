@@ -87,8 +87,12 @@ func Build(parser *argparse.Parser) (*Args, error) {
 		return nil, err
 	}
 
+	methodUpper := strings.ToUpper(*method)
+	if *repeat <= 0 {
+		*repeat = 1
+	}
 	args := Args{
-		Method:  method,
+		Method:  &methodUpper,
 		URL:     url,
 		Data:    data,
 		Headers: headers,
