@@ -21,20 +21,19 @@ func main() {
 		os.Exit(1)
 	}
 
-	list := make([]http.Res, 0)
-	resultMutex := http.ResMutex{Result: list}
+	resultMutex := http.InitResMutex(uint(*args.Repeat))
 
 	startTime := time.Now().UnixMilli()
 	if *args.Loop == "true" {
-		http.Looped(args, &resultMutex)
+		http.Looped(args, resultMutex)
 	} else {
-		http.Single(args, &resultMutex)
+		http.Single(args, resultMutex)
 	}
 	endTime := time.Now().UnixMilli()
 
 	fmt.Printf(
 		"took %vms to make %v requests.\n",
 		endTime-startTime,
-		len(resultMutex.Result),
+		len(*resultMutex.Result),
 	)
 }

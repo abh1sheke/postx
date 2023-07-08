@@ -11,16 +11,6 @@ import (
 	"github.com/abh1sheke/postx/parser"
 )
 
-type Res struct {
-	Data   string
-	Status string
-}
-
-type ResMutex struct {
-	M      sync.Mutex
-	Result []Res
-}
-
 func makeRequest(
 	id int,
 	client *http.Client,
@@ -62,10 +52,7 @@ func makeRequest(
 		fmt.Printf("error reason: %v\n", err)
 	} else {
 		mutex.M.Lock()
-		mutex.Result = append(
-			mutex.Result,
-			Res{Data: string(body), Status: response.Status},
-		)
+		mutex.Add(&Res{Data: string(body), Status: response.Status})
 		mutex.M.Unlock()
 	}
 }
