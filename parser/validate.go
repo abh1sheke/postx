@@ -11,12 +11,12 @@ import (
 
 func validateUrl(args []string) error {
 	arg := args[0]
-	_, err := url.Parse(arg)
-	if err != nil {
-		return fmt.
-			Errorf("invalid value: %v; expected valid URL", arg)
+	u, err := url.ParseRequestURI(arg)
+	if err == nil && u.Scheme != "" && u.Host != "" {
+		return nil
 	}
-	return nil
+	return fmt.
+		Errorf("invalid value: %v; expected valid URL", arg)
 }
 
 func validateMethod(args []string) error {
@@ -57,8 +57,11 @@ func validateHeaders(args []string) error {
 		return err
 	}
 	for _, v := range split {
-		if len(v) < 1 {
-			return err
+		if len(v) > len(strings.Trim(v, " ")) {
+			return fmt.Errorf(
+				"invalid value: \"%v\"; please remove trailing whitespaces",
+				v,
+			)
 		}
 	}
 	return nil
