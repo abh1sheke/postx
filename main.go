@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/abh1sheke/postx/http"
@@ -23,17 +25,31 @@ func main() {
 
 	resultMutex := http.InitResMutex(uint(*args.Repeat))
 
-	startTime := time.Now().UnixMilli()
+	startTime := time.Now()
 	if *args.Loop == "true" {
+		sig := make(chan os.Signal)
+		signal.Notify(sig)
+		go func() {
+			for {
+				switch <-sig {
+				case syscall.SIGINT:
+					fmt.Printf(
+						"keyboard interrup; exiting process.\n%v %vms\n",
+                        "took: ",
+						time.Since(startTime).Milliseconds(),
+					)
+					os.Exit(1)
+				}
+			}
+		}()
 		http.Looped(args, resultMutex)
 	} else {
 		http.Single(args, resultMutex)
 	}
-	endTime := time.Now().UnixMilli()
 
 	fmt.Printf(
 		"took %vms to make %v requests.\n",
-		endTime-startTime,
+		time.Since(startTime).Milliseconds(),
 		len(*resultMutex.Result),
 	)
 }
