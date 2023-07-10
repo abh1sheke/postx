@@ -28,10 +28,10 @@ func main() {
     }
     defer logFile.Close()
 
-	resultMutex := http.InitResMutex(uint(*args.Repeat))
+	resultMutex := http.InitResMutex(uint(*args.Parallel))
 
 	startTime := time.Now()
-	if *args.Loop == "true" {
+	if *args.Loop {
 		http.Looped(args, resultMutex, startTime, logger)
 	} else {
 		http.Single(args, resultMutex, logger)
