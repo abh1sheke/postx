@@ -3,6 +3,7 @@ package http
 import (
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"strings"
@@ -17,6 +18,7 @@ func makeRequest(
 	args *parser.Args,
 	mutex *ResMutex,
 	wg *sync.WaitGroup,
+    logger *log.Logger,
 ) {
 	defer wg.Done()
 	var request *http.Request
@@ -30,8 +32,9 @@ func makeRequest(
 	}
 
 	if err != nil {
-		fmt.Println("could not create http request")
-		fmt.Printf("error reason: %v\n", err)
+		fmt.Println("could not create http request;")
+		fmt.Println(`check logs by running "cat $TMPDIR/postx.log".`)
+		logger.Printf("could not create http request: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -41,15 +44,17 @@ func makeRequest(
 	}
 	response, err = client.Do(request)
 	if err != nil {
-		fmt.Println("could not create http request")
-		fmt.Printf("error reason: %v\n", err)
+		fmt.Println("could not perform http request;")
+		fmt.Println(`check logs by running "cat $TMPDIR/postx.log".`)
+		logger.Printf("could not perform http request: %v\n", err)
 		os.Exit(1)
 	}
 	var body []byte
 	body, err = io.ReadAll(response.Body)
 	if err != nil {
-		fmt.Printf("error reading response body for request id: %v\n", id)
-		fmt.Printf("error reason: %v\n", err)
+		fmt.Println("could not read response body.")
+		fmt.Println(`check logs by running "cat $TMPDIR/postx.log".`)
+		logger.Printf("could not perform http request: %v\n", err)
 	} else {
 		mutex.M.Lock()
 		mutex.Add(&Res{Data: string(body), Status: response.Status})
