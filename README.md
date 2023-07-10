@@ -4,21 +4,22 @@ A blazingly-fast CURL-like tool to help you test RESTful API endpoints from comm
 ## Usage
 
 ```
-usage: postx [-h|--help] -m|--method "<value>" -u|--url "<value>" [-d|--data
-             "<value>"] [-H|--headers "<value>" [-H|--headers "<value>" ...]]
-             [-r|--repeat <integer>] [-l|--loop "<value>"]
+usage: postx <Command> [-h|--help] [-p|--parallel <integer>] [-l|--loop]
+             [-o|--output "<value>"]
 
              A CLI tool to help you test RESTful endpoints
 
+Commands:
+
+  get   Perform a GET request
+  post  Perform a POST request
+
 Arguments:
 
-  -h  --help     Print help information
-  -m  --method   GET | POST; HTTP method
-  -u  --url      URL of endpoint
-  -d  --data     JSON; POST data
-  -H  --headers  key:value; Set request headers
-  -r  --repeat   number; Repeat the request n number of times
-  -l  --loop     true | false; Perform n repitions forever (with a 1s timeout)
+  -h  --help      Print help information
+  -p  --parallel  number; Perform n requests in parallel
+  -l  --loop      Loop request forever (with a 1s timeout)
+  -o  --output    Specify output file
 ```
 
 ## Installation
