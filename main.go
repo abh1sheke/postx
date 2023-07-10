@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/abh1sheke/postx/http"
-	"github.com/abh1sheke/postx/logging"
 	"github.com/abh1sheke/postx/parser"
 	"github.com/akamensky/argparse"
 )
@@ -24,14 +23,8 @@ func main() {
 		os.Exit(1)
 	}
 
-    logFile, logger, err := logging.InitLogging()
-    if err != nil {
-        fmt.Println(err)
-        os.Exit(1)
-    }
-    defer logFile.Close()
+	resultMutex := http.InitResMutex(uint(*args.Repeat))
 
-    resultMutex := http.InitResMutex(uint(*args.Repeat))
 	startTime := time.Now()
 	if *args.Loop == "true" {
 		sig := make(chan os.Signal)
@@ -49,9 +42,9 @@ func main() {
 				}
 			}
 		}()
-		http.Looped(args, resultMutex, logger)
+		http.Looped(args, resultMutex)
 	} else {
-		http.Single(args, resultMutex, logger)
+		http.Single(args, resultMutex)
 	}
 
 	fmt.Printf(
