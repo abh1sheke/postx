@@ -3,8 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"os/signal"
-	"syscall"
 	"time"
 
 	"github.com/abh1sheke/postx/http"
@@ -34,22 +32,7 @@ func main() {
 
 	startTime := time.Now()
 	if *args.Loop == "true" {
-		sig := make(chan os.Signal)
-		signal.Notify(sig)
-		go func() {
-			for {
-				switch <-sig {
-				case syscall.SIGINT:
-					fmt.Printf(
-						"keyboard interrup; exiting process.\n%v %vms\n",
-                        "took: ",
-						time.Since(startTime).Milliseconds(),
-					)
-					os.Exit(1)
-				}
-			}
-		}()
-		http.Looped(args, resultMutex, logger)
+		http.Looped(args, resultMutex, startTime, logger)
 	} else {
 		http.Single(args, resultMutex, logger)
 	}

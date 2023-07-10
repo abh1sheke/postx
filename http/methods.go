@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
 	"sync"
+	"syscall"
 	"time"
 
 	"github.com/abh1sheke/postx/parser"
@@ -20,10 +23,33 @@ func Single(args *parser.Args, mutex *ResMutex, logger *log.Logger) {
 	wg.Wait()
 }
 
-func Looped(args *parser.Args, mutex *ResMutex, logger *log.Logger) {
+func Looped(
+	args *parser.Args,
+	mutex *ResMutex,
+	startTime time.Time,
+	logger *log.Logger,
+) {
+
 	wg := new(sync.WaitGroup)
 	client := new(http.Client)
 	iterCount := 0
+
+	sig := make(chan os.Signal)
+	signal.Notify(sig)
+	go func() {
+		for {
+			switch <-sig {
+			case syscall.SIGINT:
+				fmt.Printf(
+					"\nkeyboard interrup; exiting process.\n%v %vms\n",
+					"took: ",
+					time.Since(startTime).Milliseconds(),
+				)
+				os.Exit(1)
+			}
+		}
+	}()
+
 	for {
 		for i := 1; i <= *args.Repeat; i++ {
 			wg.Add(1)
