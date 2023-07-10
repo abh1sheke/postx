@@ -21,17 +21,17 @@ func main() {
 		fmt.Print(argparser.Usage(err))
 		os.Exit(1)
 	}
-    logFile, logger, err := logging.InitLogging()
-    if err != nil {
-        fmt.Println(err)
-        os.Exit(1)
-    }
-    defer logFile.Close()
+	logFile, logger, err := logging.InitLogging()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	defer logFile.Close()
 
-	resultMutex := http.InitResMutex(uint(*args.Repeat))
+	resultMutex := http.InitResMutex(uint(*args.Parallel))
 
 	startTime := time.Now()
-	if *args.Loop == "true" {
+	if *args.Loop {
 		http.Looped(args, resultMutex, startTime, logger)
 	} else {
 		http.Single(args, resultMutex, logger)

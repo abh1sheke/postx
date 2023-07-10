@@ -14,9 +14,10 @@ import (
 )
 
 func Single(args *parser.Args, mutex *ResMutex, logger *log.Logger) {
+	defer mutex.SaveToFile(args.Output, logger)
 	wg := new(sync.WaitGroup)
 	client := new(http.Client)
-	for i := 1; i <= *args.Repeat; i++ {
+	for i := 1; i <= *args.Parallel; i++ {
 		wg.Add(1)
 		go makeRequest(i, client, args, mutex, wg, logger)
 	}
@@ -29,7 +30,6 @@ func Looped(
 	startTime time.Time,
 	logger *log.Logger,
 ) {
-
 	wg := new(sync.WaitGroup)
 	client := new(http.Client)
 	iterCount := 0
@@ -45,13 +45,14 @@ func Looped(
 					"took: ",
 					time.Since(startTime).Milliseconds(),
 				)
+				mutex.SaveToFile(args.Output, logger)
 				os.Exit(1)
 			}
 		}
 	}()
 
 	for {
-		for i := 1; i <= *args.Repeat; i++ {
+		for i := 1; i <= *args.Parallel; i++ {
 			wg.Add(1)
 			go makeRequest(i, client, args, mutex, wg, logger)
 		}

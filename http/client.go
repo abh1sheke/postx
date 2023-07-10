@@ -18,13 +18,13 @@ func makeRequest(
 	args *parser.Args,
 	mutex *ResMutex,
 	wg *sync.WaitGroup,
-    logger *log.Logger,
+	logger *log.Logger,
 ) {
 	defer wg.Done()
 	var request *http.Request
 	var response *http.Response
 	var err error
-	if *args.Method == "get" {
+	if *args.Method == "GET" {
 		request, err = http.NewRequest(*args.Method, *args.URL, nil)
 	} else {
 		data := strings.NewReader(*args.Data)
@@ -57,7 +57,8 @@ func makeRequest(
 		logger.Printf("could not perform http request: %v\n", err)
 	} else {
 		mutex.M.Lock()
-		mutex.Add(&Res{Data: string(body), Status: response.Status})
+		result := &Res{Data: string(body), Status: response.Status}
+		mutex.Add(result)
 		mutex.M.Unlock()
 	}
 }
