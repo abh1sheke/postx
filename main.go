@@ -21,12 +21,12 @@ func main() {
 		fmt.Print(argparser.Usage(err))
 		os.Exit(1)
 	}
-    logFile, logger, err := logging.InitLogging()
-    if err != nil {
-        fmt.Println(err)
-        os.Exit(1)
-    }
-    defer logFile.Close()
+	logFile, logger, err := logging.InitLogging()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	defer logFile.Close()
 
 	resultMutex := http.InitResMutex(uint(*args.Parallel))
 
