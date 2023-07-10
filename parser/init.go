@@ -15,13 +15,15 @@ type Args struct {
 	Headers  *[]string
 	Parallel *int
 	Loop     *bool
+	Output   *string
 }
 
 func (a *Args) Verify(parser *argparse.Parser) error {
 	if strings.ToLower(*a.Method) == "post" && *a.Data == "" {
 		example := strings.Join([]string{
 			"postx -m POST -u http://127:0.0.1:8000 -d",
-			"\"{\\\"id\\\": 1, \\\"hello\\\": \\\"world\\\"}\""},
+			`"{\"id\": 1, \"hello\": \"world\"}"`,
+		},
 			" ",
 		)
 		return fmt.
@@ -46,7 +48,15 @@ func Build(parser *argparse.Parser) (*Args, error) {
 		"l", "loop",
 		&argparse.Options{
 			Required: false,
-			Help:     "Perform n repitions forever (with a 1s timeout)",
+			Help:     "Loop request forever (with a 1s timeout)",
+		},
+	)
+	output := parser.String(
+		"o",
+		"output",
+		&argparse.Options{
+			Required: false,
+			Help:     "Specify output file",
 		},
 	)
 	// GET Args
@@ -105,14 +115,14 @@ func Build(parser *argparse.Parser) (*Args, error) {
 	var url, data *string
 	var header *[]string
 	if get.Happened() {
-		method = get.GetName()
+		method = strings.ToUpper(get.GetName())
 		url = getUrl
-        header = getHeaders
+		header = getHeaders
 	} else {
-		method = post.GetName()
-        url = postUrl
-        header = postHeaders
-        data = postData
+		method = strings.ToUpper(post.GetName())
+		url = postUrl
+		header = postHeaders
+		data = postData
 	}
 	if *parallel <= 0 {
 		*parallel = 1
@@ -125,6 +135,7 @@ func Build(parser *argparse.Parser) (*Args, error) {
 		Headers:  header,
 		Parallel: parallel,
 		Loop:     loop,
+		Output:   output,
 	}
 	err := args.Verify(parser)
 
