@@ -34,9 +34,4 @@ func main() {
 	} else {
 		http.Single(args, logger)
 	}
-
-	fmt.Printf(
-		"took %vms.\n",
-		time.Since(startTime).Milliseconds(),
-	)
 }
