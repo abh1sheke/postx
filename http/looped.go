@@ -13,23 +13,12 @@ import (
 	"github.com/abh1sheke/postx/parser"
 )
 
-func Single(args *parser.Args, mutex *ResMutex, logger *log.Logger) {
-	defer mutex.SaveToFile(args.Output, logger)
-	wg := new(sync.WaitGroup)
-	client := new(http.Client)
-	for i := 1; i <= *args.Parallel; i++ {
-		wg.Add(1)
-		go makeRequest(i, client, args, mutex, wg, logger)
-	}
-	wg.Wait()
-}
-
 func Looped(
 	args *parser.Args,
-	mutex *ResMutex,
 	startTime time.Time,
 	logger *log.Logger,
 ) {
+	r := InitResultList(uint(*args.Parallel))
 	wg := new(sync.WaitGroup)
 	client := new(http.Client)
 	iterCount := 0
@@ -45,16 +34,18 @@ func Looped(
 					"took: ",
 					time.Since(startTime).Milliseconds(),
 				)
-				mutex.SaveToFile(args.Output, logger)
+				r.SaveToFile(args.Output, logger)
+				Data <- nil
 				os.Exit(1)
 			}
 		}
 	}()
 
+	go Consumer(r)
 	for {
 		for i := 1; i <= *args.Parallel; i++ {
 			wg.Add(1)
-			go makeRequest(i, client, args, mutex, wg, logger)
+			go makeRequest(i, client, args, wg, logger)
 		}
 		iterCount++
 		fmt.Printf("%v iteration(s) done\n", iterCount)
