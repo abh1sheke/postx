@@ -17,6 +17,5 @@ func InitLogging() (*os.File, *log.Logger, error)  {
 	}
 	LstdFlags := log.Ldate | log.Lshortfile
     logger := log.New(f,"postx ", LstdFlags)
-    logger.Println("initialise logger")
     return f, logger, nil 
 }
