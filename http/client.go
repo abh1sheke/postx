@@ -16,7 +16,6 @@ func makeRequest(
 	id int,
 	client *http.Client,
 	args *parser.Args,
-	mutex *ResMutex,
 	wg *sync.WaitGroup,
 	logger *log.Logger,
 ) {
@@ -56,9 +55,6 @@ func makeRequest(
 		fmt.Println(`check logs by running "cat $TMPDIR/postx.log".`)
 		logger.Printf("could not perform http request: %v\n", err)
 	} else {
-		mutex.M.Lock()
-		result := &Res{Data: string(body), Status: response.Status}
-		mutex.Add(result)
-		mutex.M.Unlock()
+		Data <- &Res{Data: string(body), Status: response.Status}
 	}
 }

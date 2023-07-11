@@ -28,18 +28,10 @@ func main() {
 	}
 	defer logFile.Close()
 
-	resultMutex := http.InitResMutex(uint(*args.Parallel))
-
 	startTime := time.Now()
 	if *args.Loop {
-		http.Looped(args, resultMutex, startTime, logger)
+		http.Looped(args, startTime, logger)
 	} else {
-		http.Single(args, resultMutex, logger)
+		http.Single(args, logger)
 	}
-
-	fmt.Printf(
-		"took %vms to make %v requests.\n",
-		time.Since(startTime).Milliseconds(),
-		len(*resultMutex.Result),
-	)
 }
