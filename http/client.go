@@ -23,7 +23,7 @@ func makeRequest(
 	var request *http.Request
 	var response *http.Response
 	var err error
-	if *args.Method == "GET" {
+	if *args.Method == "GET" || *args.Method == "HEAD" {
 		request, err = http.NewRequest(*args.Method, *args.URL, nil)
 	} else {
 		data := strings.NewReader(*args.Data)

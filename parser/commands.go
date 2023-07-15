@@ -83,7 +83,7 @@ func Post(parser *argparse.Parser) (
 		"d",
 		"data",
 		&argparse.Options{
-			Required: false,
+			Required: true,
 			Help:     "JSON; POST data",
 			Validate: validateData,
 		},
@@ -119,7 +119,7 @@ func Put(parser *argparse.Parser) (
 		"d",
 		"data",
 		&argparse.Options{
-			Required: false,
+			Required: true,
 			Help:     "JSON; PUT data",
 			Validate: validateData,
 		},
@@ -129,7 +129,7 @@ func Put(parser *argparse.Parser) (
 }
 
 func Delete(parser *argparse.Parser) (
-	*argparse.Command, *string, *[]string,
+	*argparse.Command, *string, *[]string, *string,
 ) {
 	command := parser.
 		NewCommand("get", "Perform a DELETE request")
@@ -151,6 +151,15 @@ func Delete(parser *argparse.Parser) (
 			Validate: validateHeaders,
 		},
 	)
+	data := command.String(
+		"d",
+		"data",
+		&argparse.Options{
+			Required: false,
+			Help:     "JSON; PUT data",
+			Validate: validateData,
+		},
+	)
 
-	return command, url, headers
+	return command, url, headers, data
 }
