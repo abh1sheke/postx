@@ -11,8 +11,11 @@ usage: postx <Command> [-h|--help] [-p|--parallel <integer>] [-l|--loop]
 
 Commands:
 
-  get   Perform a GET request
-  post  Perform a POST request
+  get     Perform a GET request
+  head    Perform a HEAD request
+  post    Perform a POST request
+  put     Perform a PUT request
+  delete  Perform a DELETE request
 
 Arguments:
 
