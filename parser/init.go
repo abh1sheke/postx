@@ -33,8 +33,12 @@ func (a *Args) Verify(parser *argparse.Parser) error {
 }
 
 func Build(parser *argparse.Parser) (*Args, error) {
-	get := parser.NewCommand("get", "Perform a GET request")
-	post := parser.NewCommand("post", "Perform a POST request")
+	get, getUrl, getHeaders := Get(parser)
+	head, headUrl, headHeaders := Head(parser)
+	post, postUrl, postHeaders, postData := Post(parser)
+	put, putUrl, putHeaders, putData := Put(parser)
+	del, delUrl, delHeaders := Delete(parser)
+
 	// Common args
 	parallel := parser.Int(
 		"p",
@@ -59,53 +63,6 @@ func Build(parser *argparse.Parser) (*Args, error) {
 			Help:     "Specify output file",
 		},
 	)
-	// GET Args
-	getUrl := get.String(
-		"u",
-		"url",
-		&argparse.Options{
-			Required: true,
-			Help:     "URL of endpoint",
-			Validate: validateUrl,
-		},
-	)
-	getHeaders := get.StringList(
-		"H",
-		"header",
-		&argparse.Options{
-			Required: false,
-			Help:     "key:value; Set request header",
-			Validate: validateHeaders,
-		},
-	)
-	// POST args
-	postUrl := post.String(
-		"u",
-		"url",
-		&argparse.Options{
-			Required: true,
-			Help:     "URL of endpoint",
-			Validate: validateUrl,
-		},
-	)
-	postHeaders := post.StringList(
-		"H",
-		"header",
-		&argparse.Options{
-			Required: false,
-			Help:     "key:value; Set request header",
-			Validate: validateHeaders,
-		},
-	)
-	postData := post.String(
-		"d",
-		"data",
-		&argparse.Options{
-			Required: false,
-			Help:     "JSON; POST data",
-			Validate: validateData,
-		},
-	)
 
 	if err := parser.Parse(os.Args); err != nil {
 		return nil, err
@@ -115,15 +72,29 @@ func Build(parser *argparse.Parser) (*Args, error) {
 	var url, data *string
 	var header *[]string
 	if get.Happened() {
-		method = strings.ToUpper(get.GetName())
+		method = "GET"
 		url = getUrl
 		header = getHeaders
-	} else {
-		method = strings.ToUpper(post.GetName())
+	} else if post.Happened() {
+		method = "POST"
 		url = postUrl
 		header = postHeaders
 		data = postData
+	} else if put.Happened() {
+		method = "PUT"
+		url = putUrl
+		header = putHeaders
+		data = putData
+	} else if del.Happened() {
+		method = "DELETE"
+		url = delUrl
+		header = delHeaders
+	} else if head.Happened() {
+		method = "HEAD"
+		url = headUrl
+		header = headHeaders
 	}
+
 	if *parallel <= 0 {
 		*parallel = 1
 	}
