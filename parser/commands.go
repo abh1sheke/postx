@@ -33,7 +33,7 @@ func Head(parser *argparse.Parser) (
 	*argparse.Command, *string, *[]string,
 ) {
 	command := parser.
-		NewCommand("get", "Perform a HEAD request")
+		NewCommand("head", "Perform a HEAD request")
 	url := command.String(
 		"u",
 		"url",
@@ -60,7 +60,7 @@ func Post(parser *argparse.Parser) (
 	*argparse.Command, *string, *[]string, *string,
 ) {
 	command := parser.
-		NewCommand("command", "Perform a POST request")
+		NewCommand("post", "Perform a POST request")
 	url := command.String(
 		"u",
 		"url",
@@ -96,7 +96,7 @@ func Put(parser *argparse.Parser) (
 	*argparse.Command, *string, *[]string, *string,
 ) {
 	command := parser.
-		NewCommand("command", "Perform a PUT request")
+		NewCommand("put", "Perform a PUT request")
 	url := command.String(
 		"u",
 		"url",
@@ -132,7 +132,7 @@ func Delete(parser *argparse.Parser) (
 	*argparse.Command, *string, *[]string, *string,
 ) {
 	command := parser.
-		NewCommand("get", "Perform a DELETE request")
+		NewCommand("delete", "Perform a DELETE request")
 	url := command.String(
 		"u",
 		"url",

@@ -37,9 +37,8 @@ func Build(parser *argparse.Parser) (*Args, error) {
 	head, headUrl, headHeaders := Head(parser)
 	post, postUrl, postHeaders, postData := Post(parser)
 	put, putUrl, putHeaders, putData := Put(parser)
-	del, delUrl, delHeaders := Delete(parser)
+	del, delUrl, delHeaders, delData := Delete(parser)
 
-	// Common args
 	parallel := parser.Int(
 		"p",
 		"parallel",
@@ -89,6 +88,7 @@ func Build(parser *argparse.Parser) (*Args, error) {
 		method = "DELETE"
 		url = delUrl
 		header = delHeaders
+        data = delData
 	} else if head.Happened() {
 		method = "HEAD"
 		url = headUrl
