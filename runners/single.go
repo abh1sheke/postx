@@ -7,16 +7,27 @@ import (
 	"sync"
 	"time"
 
-	lochttp "github.com/abh1sheke/postx/http"
+	lhttp "github.com/abh1sheke/postx/http"
 	"github.com/abh1sheke/postx/logging"
 	"github.com/abh1sheke/postx/parser"
 )
 
+type RequestFunc = func(id int, client *http.Client, args *parser.Args, wg *sync.WaitGroup, logger *log.Logger)
+
 func Single(args *parser.Args, logger *log.Logger) {
-	r := lochttp.InitResultList(uint(*args.Parallel))
+	r := lhttp.InitResultList(uint(*args.Parallel))
+	var method RequestFunc
+
+	switch *args.Method {
+	case "FORM":
+		method = lhttp.FormRequest
+	default:
+		method = lhttp.DefaultRequest
+	}
+
 	startTime := time.Now()
 	defer func() {
-		lochttp.Data <- nil
+		lhttp.Data <- nil
 		logging.SaveToFile(r, args.Output, logger)
 		fmt.Printf(
 			"took %vms for %v requests.\n",
@@ -29,7 +40,7 @@ func Single(args *parser.Args, logger *log.Logger) {
 	client := new(http.Client)
 	for i := 1; i <= *args.Parallel; i++ {
 		wg.Add(1)
-		go lochttp.DefaultRequest(i, client, args, wg, logger)
+		go method(i, client, args, wg, logger)
 	}
 	wg.Wait()
 }

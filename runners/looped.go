@@ -25,6 +25,14 @@ func Looped(
 	client := new(http.Client)
 	iterCount := 0
 
+	var method RequestFunc
+	switch *args.Method {
+	case "FORM":
+		method = lhttp.FormRequest
+	default:
+		method = lhttp.DefaultRequest
+	}
+
 	sig := make(chan os.Signal)
 	signal.Notify(sig)
 	go func() {
@@ -47,7 +55,7 @@ func Looped(
 	for {
 		for i := 1; i <= *args.Parallel; i++ {
 			wg.Add(1)
-			go lhttp.DefaultRequest(i, client, args, wg, logger)
+			go method(i, client, args, wg, logger)
 		}
 		iterCount++
 		fmt.Printf("%v iteration(s) done\n", iterCount)
