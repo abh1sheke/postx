@@ -1,5 +1,5 @@
 # postx
-A blazingly-fast CURL-like tool to help you test RESTful API endpoints quickly and efficiently from your command line.
+A blazingly-fast, multi-threaded, cURL-like tool for transferring data over HTTP protocol and for testing/debugging API endpoints.
 
 ## Usage
 
