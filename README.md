@@ -4,10 +4,10 @@ A blazingly-fast, multi-threaded, cURL-like tool for transferring data over HTTP
 ## Usage
 
 ```
-usage: postx <Command> [-h|--help] [-p|--parallel <integer>] [-l|--loop]
+postx <Command> [-h|--help] [-p|--parallel <integer>] [-l|--loop]
              [-o|--output "<value>"]
 
-             A CLI tool to help you test RESTful endpoints
+             A CLI tool for transferring data over HTTP.
 
 Commands:
 
@@ -16,6 +16,7 @@ Commands:
   post    Perform a POST request
   put     Perform a PUT request
   delete  Perform a DELETE request
+  form    Submit a HTML form
 
 Arguments:
 
