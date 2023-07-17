@@ -14,7 +14,7 @@ import (
 func main() {
 	argparser := argparse.NewParser(
 		"postx",
-		"A CLI tool to help you test RESTful endpoints",
+		"A CLI tool for transferring data over HTTP.",
 	)
 	args, err := parser.Build(argparser)
 	if err != nil {
