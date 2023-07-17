@@ -1,4 +1,4 @@
-package http
+package runners
 
 import (
 	"fmt"
@@ -10,6 +10,8 @@ import (
 	"syscall"
 	"time"
 
+	lhttp "github.com/abh1sheke/postx/http"
+	"github.com/abh1sheke/postx/logging"
 	"github.com/abh1sheke/postx/parser"
 )
 
@@ -18,7 +20,7 @@ func Looped(
 	startTime time.Time,
 	logger *log.Logger,
 ) {
-	r := InitResultList(uint(*args.Parallel))
+	r := lhttp.InitResultList(uint(*args.Parallel))
 	wg := new(sync.WaitGroup)
 	client := new(http.Client)
 	iterCount := 0
@@ -34,18 +36,18 @@ func Looped(
 					"took: ",
 					time.Since(startTime).Milliseconds(),
 				)
-				r.SaveToFile(args.Output, logger)
-				Data <- nil
+				logging.SaveToFile(r, args.Output, logger)
+				lhttp.Data <- nil
 				os.Exit(1)
 			}
 		}
 	}()
 
-	go Consumer(r)
+	go r.Consumer()
 	for {
 		for i := 1; i <= *args.Parallel; i++ {
 			wg.Add(1)
-			go makeRequest(i, client, args, wg, logger)
+			go lhttp.DefaultRequest(i, client, args, wg, logger)
 		}
 		iterCount++
 		fmt.Printf("%v iteration(s) done\n", iterCount)
