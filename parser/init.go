@@ -1,9 +1,7 @@
 package parser
 
 import (
-	"fmt"
 	"os"
-	"strings"
 
 	"github.com/akamensky/argparse"
 )
@@ -16,20 +14,7 @@ type Args struct {
 	Parallel *int
 	Loop     *bool
 	Output   *string
-}
-
-func (a *Args) Verify(parser *argparse.Parser) error {
-	if strings.ToLower(*a.Method) == "post" && *a.Data == "" {
-		example := strings.Join([]string{
-			"postx -m POST -u http://127:0.0.1:8000 -d",
-			`"{\"id\": 1, \"hello\": \"world\"}"`,
-		},
-			" ",
-		)
-		return fmt.
-			Errorf("data required while using POST.\nexample: %v\n", example)
-	}
-	return nil
+	FormData *[]string
 }
 
 func Build(parser *argparse.Parser) (*Args, error) {
@@ -38,6 +23,7 @@ func Build(parser *argparse.Parser) (*Args, error) {
 	post, postUrl, postHeaders, postData := Post(parser)
 	put, putUrl, putHeaders, putData := Put(parser)
 	del, delUrl, delHeaders, delData := Delete(parser)
+	form, formUrl, formHeaders, formData := Form(parser)
 
 	parallel := parser.Int(
 		"p",
@@ -63,13 +49,14 @@ func Build(parser *argparse.Parser) (*Args, error) {
 		},
 	)
 
-	if err := parser.Parse(os.Args); err != nil {
+	err := parser.Parse(os.Args)
+	if err != nil {
 		return nil, err
 	}
 
 	var method string
 	var url, data *string
-	var header *[]string
+	var header, fdata *[]string
 	if get.Happened() {
 		method = "GET"
 		url = getUrl
@@ -88,11 +75,16 @@ func Build(parser *argparse.Parser) (*Args, error) {
 		method = "DELETE"
 		url = delUrl
 		header = delHeaders
-        data = delData
+		data = delData
 	} else if head.Happened() {
 		method = "HEAD"
 		url = headUrl
 		header = headHeaders
+	} else if form.Happened() {
+		method = "FORM"
+		url = formUrl
+		header = formHeaders
+		fdata = formData
 	}
 
 	if *parallel <= 0 {
@@ -107,8 +99,8 @@ func Build(parser *argparse.Parser) (*Args, error) {
 		Parallel: parallel,
 		Loop:     loop,
 		Output:   output,
+		FormData: fdata,
 	}
-	err := args.Verify(parser)
 
 	return &args, err
 }
