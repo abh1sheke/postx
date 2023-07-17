@@ -12,7 +12,7 @@ import (
 	"github.com/abh1sheke/postx/parser"
 )
 
-func makeRequest(
+func DefaultRequest(
 	id int,
 	client *http.Client,
 	args *parser.Args,

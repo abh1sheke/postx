@@ -5,9 +5,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/abh1sheke/postx/http"
 	"github.com/abh1sheke/postx/logging"
 	"github.com/abh1sheke/postx/parser"
+	"github.com/abh1sheke/postx/runners"
 	"github.com/akamensky/argparse"
 )
 
@@ -30,8 +30,8 @@ func main() {
 
 	startTime := time.Now()
 	if *args.Loop {
-		http.Looped(args, startTime, logger)
+		runners.Looped(args, startTime, logger)
 	} else {
-		http.Single(args, logger)
+		runners.Single(args, logger)
 	}
 }

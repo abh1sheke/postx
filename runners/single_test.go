@@ -1,4 +1,4 @@
-package http
+package runners
 
 import (
 	"fmt"
@@ -30,3 +30,4 @@ func BenchmarkSingle(t *testing.B) {
 
 	Single(&args, logger)
 }
+

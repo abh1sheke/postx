@@ -163,3 +163,39 @@ func Delete(parser *argparse.Parser) (
 
 	return command, url, headers, data
 }
+
+func Form(parser *argparse.Parser) (
+	*argparse.Command, *string, *[]string, *[]string,
+) {
+	command := parser.
+		NewCommand("form", "Submit a HTML form")
+	url := command.String(
+		"u",
+		"url",
+		&argparse.Options{
+			Required: true,
+			Help:     "URL of endpoint",
+			Validate: validateUrl,
+		},
+	)
+	headers := command.StringList(
+		"H",
+		"header",
+		&argparse.Options{
+			Required: false,
+			Help:     "key:value; Set request header",
+			Validate: validateHeaders,
+		},
+	)
+	data := command.StringList(
+		"D",
+		"data",
+		&argparse.Options{
+			Required: true,
+			Help:     "field=value; Set form data fields",
+			Validate: validateFormData,
+		},
+	)
+
+	return command, url, headers, data
+}
