@@ -4,11 +4,13 @@ import (
 	"fmt"
 	"log"
 	"os"
+
+	"github.com/goccy/go-json"
 )
 
 type Res struct {
-	Data   string
-	Status string
+	Data   string `json:"data"`
+	Status string `json:"status"`
 }
 
 var Data chan *Res = make(chan *Res)
@@ -40,15 +42,23 @@ func (r *Result) SaveToFile(outfile *string, logger *log.Logger) {
 		return
 	}
 	fmt.Println("saving output...")
-	output := fmt.Sprintf("Total requests made: %v\n", len(*r.List))
-	for i, v := range *r.List {
+	output := make([]Res, len(*r.List))
+	for _, v := range *r.List {
 		if v != nil {
-			line := fmt.Sprintf("Request #%v:\n\t%v\n", i+1, *v)
-			output += line
+			output = append(output, *v)
 		}
 	}
-	err := os.WriteFile(
-		*outfile, []byte(output), 0644,
+
+	bytes, err := json.MarshalIndent(output, "", "  ")
+	if err != nil {
+		fmt.Println("could not write to outfile.")
+		fmt.Println(`check logs by running "cat $TMPDIR/postx.log".`)
+		logger.Printf("outfile write error: %v\n", err)
+		os.Exit(1)
+	}
+
+	err = os.WriteFile(
+		*outfile, bytes, 0644,
 	)
 	if err != nil {
 		fmt.Println("could not write to outfile.")
