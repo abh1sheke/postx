@@ -15,6 +15,7 @@ import (
 
 func DefaultRequest(
 	id int,
+	c chan *result.Data,
 	client *http.Client,
 	args *parser.Args,
 	wg *sync.WaitGroup,
@@ -58,6 +59,6 @@ func DefaultRequest(
 		fmt.Println(`check logs by running "cat $TMPDIR/postx.log".`)
 		logger.Printf("could not perform http request: %v\n", err)
 	} else {
-		result.DataChan <- &result.Data{Body: &body, Request: request, Response: response}
+		c <- &result.Data{Body: &body, Request: request, Response: response}
 	}
 }

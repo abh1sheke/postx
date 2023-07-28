@@ -34,6 +34,7 @@ func Looped(
 		method = lhttp.DefaultRequest
 	}
 
+	c := make(chan *result.Data)
 	sig := make(chan os.Signal)
 	signal.Notify(sig)
 	go func() {
@@ -46,17 +47,17 @@ func Looped(
 					time.Since(startTime).Milliseconds(),
 				)
 				logging.SaveToFile(r, args.Output, logger)
-				result.DataChan <- nil
+				c <- nil
 				os.Exit(1)
 			}
 		}
 	}()
 
-	go r.Consumer()
+	go r.Consumer(c)
 	for {
 		for i := 1; i <= *args.Parallel; i++ {
 			wg.Add(1)
-			go method(i, client, args, wg, logger)
+			go method(i, c, client, args, wg, logger)
 		}
 		iterCount++
 		fmt.Printf("%v iteration(s) done\n", iterCount)

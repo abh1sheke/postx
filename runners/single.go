@@ -24,9 +24,10 @@ func Single(args *parser.Args, logger *log.Logger) {
 		method = lhttp.DefaultRequest
 	}
 
+	c := make(chan *result.Data, *args.Parallel)
 	startTime := time.Now()
 	defer func() {
-		result.DataChan <- nil
+		c <- nil
 		logging.SaveToFile(r, args.Output, logger)
 		fmt.Printf(
 			"took %vms for %v requests.\n",
@@ -34,12 +35,12 @@ func Single(args *parser.Args, logger *log.Logger) {
 			*args.Parallel,
 		)
 	}()
-	go r.Consumer()
+	go r.Consumer(c)
 	wg := new(sync.WaitGroup)
 	client := new(http.Client)
 	for i := 1; i <= *args.Parallel; i++ {
 		wg.Add(1)
-		go method(i, client, args, wg, logger)
+		go method(i, c, client, args, wg, logger)
 	}
 	wg.Wait()
 }
