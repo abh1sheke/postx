@@ -1,27 +1,20 @@
-package http
-
-type Res struct {
-	Data   string `json:"data"`
-	Status string `json:"status"`
-}
-
-var Data chan *Res = make(chan *Res)
+package result
 
 type Result struct {
-	List *[]*Res
+	List *[]*Data
 	head int
 }
 
 func (r *Result) resize() {
 	capacity := 2 * len(*r.List)
-	newList := make([]*Res, capacity, capacity)
+	newList := make([]*Data, capacity, capacity)
 	for i, v := range *r.List {
 		newList[i] = v
 	}
 	r.List = &newList
 }
 
-func (r *Result) Add(item *Res) {
+func (r *Result) Add(item *Data) {
 	if r.head+1 == len(*r.List) {
 		r.resize()
 	}
@@ -32,7 +25,7 @@ func (r *Result) Add(item *Res) {
 func (r *Result) Consumer() {
 	for {
 		select {
-		case data := <-Data:
+		case data := <-DataChan:
 			if data == nil {
 				break
 			} else {
@@ -43,6 +36,6 @@ func (r *Result) Consumer() {
 }
 
 func InitResultList(size uint) *Result {
-	list := make([]*Res, size, size)
+	list := make([]*Data, size, size)
 	return &Result{List: &list, head: -1}
 }
