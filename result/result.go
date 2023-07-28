@@ -22,10 +22,10 @@ func (r *Result) Add(item *Data) {
 	(*r.List)[r.head] = item
 }
 
-func (r *Result) Consumer() {
+func (r *Result) Consumer(c chan *Data) {
 	for {
 		select {
-		case data := <-DataChan:
+		case data := <-c:
 			if data == nil {
 				break
 			} else {

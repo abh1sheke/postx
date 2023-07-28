@@ -20,6 +20,3 @@ func (r *Data) GetRequest() *http.Request {
 func (r *Data) GetResponse() *http.Response {
 	return r.Response
 }
-
-var DataChan chan *Data = make(chan *Data)
-
