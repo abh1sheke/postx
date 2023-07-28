@@ -1,11 +1,18 @@
 # postx
-A blazingly-fast, multi-threaded, cURL-like tool for transferring data over HTTP protocol and for testing/debugging API endpoints.
+Imagine `cURL`, but on steroids. postx is just that. A blisteringly-fast, concurrent and easy to use CLI tool that greatly expedites your development by allowing for speedy data transfers and robust endpoint testing capabilities.
+
+## Features
+### Perform HTTP requests
+Just like cURL, postx allows you to perform the basic HTTP requests (GET, POST, HEAD, PUT & DELETE), in addition to requests involving form data.
+
+### Make requests concurrently
+Postx helps you test your API endpoints by helping you perform N requests simultaneously. You can also perform said concurrent requests in loop with a set timeout between each iteraton to further stress-test your endpoints.
 
 ## Usage
 
 ```
 postx <Command> [-h|--help] [-p|--parallel <integer>] [-l|--loop]
-             [-o|--output "<value>"]
+             [-i|--include] [-o|--output "<value>"]
 
              A CLI tool for transferring data over HTTP.
 
@@ -23,6 +30,7 @@ Arguments:
   -h  --help      Print help information
   -p  --parallel  number; Perform n requests in parallel
   -l  --loop      Loop request forever (with a 1s timeout)
+  -i  --include   Include response headers in the output
   -o  --output    Specify output file
 ```
 
