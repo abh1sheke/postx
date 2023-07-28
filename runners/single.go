@@ -24,11 +24,11 @@ func Single(args *parser.Args, logger *log.Logger) {
 		method = lhttp.DefaultRequest
 	}
 
-	c := make(chan *result.Data, *args.Parallel)
+	c := make(chan *result.Data)
 	startTime := time.Now()
 	defer func() {
 		c <- nil
-		logging.SaveToFile(r, args.Output, logger)
+		logging.HandleLogging(args, r, logger)
 		fmt.Printf(
 			"took %vms for %v requests.\n",
 			time.Since(startTime).Milliseconds(),

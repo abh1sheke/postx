@@ -46,7 +46,7 @@ func Looped(
 					"took: ",
 					time.Since(startTime).Milliseconds(),
 				)
-				logging.SaveToFile(r, args.Output, logger)
+				logging.HandleLogging(args, r, logger)
 				c <- nil
 				os.Exit(1)
 			}
