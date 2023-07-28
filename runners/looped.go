@@ -13,6 +13,7 @@ import (
 	lhttp "github.com/abh1sheke/postx/http"
 	"github.com/abh1sheke/postx/logging"
 	"github.com/abh1sheke/postx/parser"
+	"github.com/abh1sheke/postx/result"
 )
 
 func Looped(
@@ -20,7 +21,7 @@ func Looped(
 	startTime time.Time,
 	logger *log.Logger,
 ) {
-	r := lhttp.InitResultList(uint(*args.Parallel))
+	r := result.InitResultList(uint(*args.Parallel))
 	wg := new(sync.WaitGroup)
 	client := new(http.Client)
 	iterCount := 0
@@ -45,7 +46,7 @@ func Looped(
 					time.Since(startTime).Milliseconds(),
 				)
 				logging.SaveToFile(r, args.Output, logger)
-				lhttp.Data <- nil
+				result.DataChan <- nil
 				os.Exit(1)
 			}
 		}

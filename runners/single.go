@@ -10,12 +10,11 @@ import (
 	lhttp "github.com/abh1sheke/postx/http"
 	"github.com/abh1sheke/postx/logging"
 	"github.com/abh1sheke/postx/parser"
+	"github.com/abh1sheke/postx/result"
 )
 
-type RequestFunc = func(id int, client *http.Client, args *parser.Args, wg *sync.WaitGroup, logger *log.Logger)
-
 func Single(args *parser.Args, logger *log.Logger) {
-	r := lhttp.InitResultList(uint(*args.Parallel))
+	r := result.InitResultList(uint(*args.Parallel))
 	var method RequestFunc
 
 	switch *args.Method {
@@ -27,7 +26,7 @@ func Single(args *parser.Args, logger *log.Logger) {
 
 	startTime := time.Now()
 	defer func() {
-		lhttp.Data <- nil
+		result.DataChan <- nil
 		logging.SaveToFile(r, args.Output, logger)
 		fmt.Printf(
 			"took %vms for %v requests.\n",
