@@ -13,8 +13,9 @@ type Args struct {
 	Headers  *[]string
 	Parallel *int
 	Loop     *bool
-	Output   *string
 	FormData *[]string
+	Include  *bool
+	Output   *string
 }
 
 func Build(parser *argparse.Parser) (*Args, error) {
@@ -38,6 +39,13 @@ func Build(parser *argparse.Parser) (*Args, error) {
 		&argparse.Options{
 			Required: false,
 			Help:     "Loop request forever (with a 1s timeout)",
+		},
+	)
+	include := parser.Flag(
+		"i", "include",
+		&argparse.Options{
+			Required: false,
+			Help:     "Include response headers in the output",
 		},
 	)
 	output := parser.String(
@@ -98,8 +106,9 @@ func Build(parser *argparse.Parser) (*Args, error) {
 		Headers:  header,
 		Parallel: parallel,
 		Loop:     loop,
-		Output:   output,
 		FormData: fdata,
+    Include: include,
+    Output:   output,
 	}
 
 	return &args, err
