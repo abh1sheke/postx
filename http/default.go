@@ -37,6 +37,8 @@ func DefaultRequest(
 		os.Exit(1)
 	}
 
+	request.Header.Set("User-Agent", "postx/0.1")
+
 	for _, v := range *args.Headers {
 		values := strings.Split(v, ":")
 		request.Header.Add(values[0], values[1])

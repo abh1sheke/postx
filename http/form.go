@@ -28,7 +28,7 @@ func FormRequest(
 	form := url.Values{}
 	for _, v := range *args.FormData {
 		values := strings.Split(v, "=")
-        form.Add(values[0], values[1])
+		form.Add(values[0], values[1])
 	}
 	request, err = http.NewRequest("POST", *args.URL, strings.NewReader(form.Encode()))
 
@@ -39,7 +39,9 @@ func FormRequest(
 		os.Exit(1)
 	}
 
-    request.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+	request.Header.Set("User-Agent", "postx/0.1")
+
+	request.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	for _, v := range *args.Headers {
 		values := strings.Split(v, ":")
 		request.Header.Add(values[0], values[1])
