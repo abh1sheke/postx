@@ -10,6 +10,7 @@ import (
 	"sync"
 
 	"github.com/abh1sheke/postx/parser"
+	"github.com/abh1sheke/postx/result"
 )
 
 func DefaultRequest(
@@ -57,6 +58,6 @@ func DefaultRequest(
 		fmt.Println(`check logs by running "cat $TMPDIR/postx.log".`)
 		logger.Printf("could not perform http request: %v\n", err)
 	} else {
-		Data <- &Res{Data: string(body), Status: response.Status}
+		result.DataChan <- &result.Data{Body: &body, Request: request, Response: response}
 	}
 }
