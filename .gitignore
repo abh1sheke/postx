@@ -19,3 +19,6 @@ out/
 
 # Go workspace file
 go.work
+
+# macOS specific files
+.DS_Store
