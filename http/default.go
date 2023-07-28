@@ -59,6 +59,6 @@ func DefaultRequest(
 		fmt.Println(`check logs by running "cat $TMPDIR/postx.log".`)
 		logger.Printf("could not perform http request: %v\n", err)
 	} else {
-		c <- &result.Data{Body: &body, Request: request, Response: response}
+		c <- &result.Data{Body: &body, Response: response}
 	}
 }
