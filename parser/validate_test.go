@@ -41,7 +41,7 @@ func TestUrl(t *testing.T) {
 	}
 }
 
-func TestHeaders(t *testing.T) {
+func TestFields(t *testing.T) {
 	invalidHeaders := []string{
 		"key= value",
 		"key=value ",
@@ -61,7 +61,7 @@ func TestHeaders(t *testing.T) {
 	}
 
 	for i := range invalidHeaders {
-		err := validateHeaders(invalidHeaders[i : i+1])
+		err := validateFields(invalidHeaders[i : i+1])
 		if err == nil {
 			t.Fail()
 		}
