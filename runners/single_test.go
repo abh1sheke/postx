@@ -30,4 +30,3 @@ func BenchmarkSingle(t *testing.B) {
 
 	Single(&args, logger)
 }
-
