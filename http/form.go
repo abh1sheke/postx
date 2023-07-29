@@ -45,7 +45,7 @@ func FormRequest(
 
 	request.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	for _, v := range *args.Headers {
-		values := strings.Split(v, ":")
+		values := strings.Split(v, "=")
 		request.Header.Add(values[0], values[1])
 	}
 
