@@ -21,8 +21,8 @@ func Get(parser *argparse.Parser) (
 		"header",
 		&argparse.Options{
 			Required: false,
-			Help:     "key:value; Set request header",
-			Validate: validateHeaders,
+			Help:     "field=value; Set request header",
+			Validate: validateFields,
 		},
 	)
 
@@ -48,8 +48,8 @@ func Head(parser *argparse.Parser) (
 		"header",
 		&argparse.Options{
 			Required: false,
-			Help:     "key:value; Set request header",
-			Validate: validateHeaders,
+			Help:     "field=value; Set request header",
+			Validate: validateFields,
 		},
 	)
 
@@ -57,7 +57,7 @@ func Head(parser *argparse.Parser) (
 }
 
 func Post(parser *argparse.Parser) (
-	*argparse.Command, *string, *[]string, *string,
+	*argparse.Command, *string, *[]string, *[]string,
 ) {
 	command := parser.
 		NewCommand("post", "Perform a POST request")
@@ -75,17 +75,17 @@ func Post(parser *argparse.Parser) (
 		"header",
 		&argparse.Options{
 			Required: false,
-			Help:     "key:value; Set request header",
-			Validate: validateHeaders,
+			Help:     "field=value; Set request header",
+			Validate: validateFields,
 		},
 	)
-	data := command.String(
+	data := command.StringList(
 		"d",
 		"data",
 		&argparse.Options{
 			Required: true,
-			Help:     "JSON; POST data",
-			Validate: validateData,
+			Help:     "field=value; Set POST data body",
+			Validate: validateFields,
 		},
 	)
 
@@ -93,7 +93,7 @@ func Post(parser *argparse.Parser) (
 }
 
 func Put(parser *argparse.Parser) (
-	*argparse.Command, *string, *[]string, *string,
+	*argparse.Command, *string, *[]string, *[]string,
 ) {
 	command := parser.
 		NewCommand("put", "Perform a PUT request")
@@ -111,17 +111,17 @@ func Put(parser *argparse.Parser) (
 		"header",
 		&argparse.Options{
 			Required: false,
-			Help:     "key:value; Set request header",
-			Validate: validateHeaders,
+			Help:     "field=value; Set request header",
+			Validate: validateFields,
 		},
 	)
-	data := command.String(
+	data := command.StringList(
 		"d",
 		"data",
 		&argparse.Options{
 			Required: true,
-			Help:     "JSON; PUT data",
-			Validate: validateData,
+			Help:     "field=value; Set PUT data body",
+			Validate: validateFields,
 		},
 	)
 
@@ -129,7 +129,7 @@ func Put(parser *argparse.Parser) (
 }
 
 func Delete(parser *argparse.Parser) (
-	*argparse.Command, *string, *[]string, *string,
+	*argparse.Command, *string, *[]string, *[]string,
 ) {
 	command := parser.
 		NewCommand("delete", "Perform a DELETE request")
@@ -147,17 +147,17 @@ func Delete(parser *argparse.Parser) (
 		"header",
 		&argparse.Options{
 			Required: false,
-			Help:     "key:value; Set request header",
-			Validate: validateHeaders,
+			Help:     "field=value; Set request header",
+			Validate: validateFields,
 		},
 	)
-	data := command.String(
+	data := command.StringList(
 		"d",
 		"data",
 		&argparse.Options{
 			Required: false,
-			Help:     "JSON; PUT data",
-			Validate: validateData,
+			Help:     "field=value; Set DELETE body data",
+			Validate: validateFields,
 		},
 	)
 
@@ -183,8 +183,8 @@ func Form(parser *argparse.Parser) (
 		"header",
 		&argparse.Options{
 			Required: false,
-			Help:     "key:value; Set request header",
-			Validate: validateHeaders,
+			Help:     "field=value; Set request header",
+			Validate: validateFields,
 		},
 	)
 	data := command.StringList(
@@ -192,8 +192,8 @@ func Form(parser *argparse.Parser) (
 		"data",
 		&argparse.Options{
 			Required: true,
-			Help:     "field=value; Set form data fields",
-			Validate: validateFormData,
+			Help:     "field=value; Set form data",
+			Validate: validateFields,
 		},
 	)
 
