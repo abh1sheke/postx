@@ -43,21 +43,21 @@ func TestUrl(t *testing.T) {
 
 func TestHeaders(t *testing.T) {
 	invalidHeaders := []string{
-		"key: value",
-		"key:value ",
-		"key: value ",
-		" key:value",
-		"key :value",
-		" key :value",
-		"key : value",
-		"key :value ",
-		"key : value",
-		" key: value",
-		" key:value ",
-		" key: value ",
-		" key :value ",
-		" key : value",
-		" key : value ",
+		"key= value",
+		"key=value ",
+		"key= value ",
+		" key=value",
+		"key =value",
+		" key =value",
+		"key = value",
+		"key =value ",
+		"key = value",
+		" key= value",
+		" key=value ",
+		" key= value ",
+		" key =value ",
+		" key = value",
+		" key = value ",
 	}
 
 	for i := range invalidHeaders {

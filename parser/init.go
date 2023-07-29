@@ -9,7 +9,7 @@ import (
 type Args struct {
 	Method   *string
 	URL      *string
-	Data     *string
+	Data     *[]string
 	Headers  *[]string
 	Parallel *int
 	Loop     *bool
@@ -21,10 +21,10 @@ type Args struct {
 func Build(parser *argparse.Parser) (*Args, error) {
 	get, getUrl, getHeaders := Get(parser)
 	head, headUrl, headHeaders := Head(parser)
-	post, postUrl, postHeaders, postData := Post(parser)
-	put, putUrl, putHeaders, putData := Put(parser)
-	del, delUrl, delHeaders, delData := Delete(parser)
-	form, formUrl, formHeaders, formData := Form(parser)
+	post, postUrl, postHeaders, postBody := Post(parser)
+	put, putUrl, putHeaders, putBody := Put(parser)
+	del, delUrl, delHeaders, delBody := Delete(parser)
+	form, formUrl, formHeaders, formBody := Form(parser)
 
 	parallel := parser.Int(
 		"p",
@@ -63,8 +63,8 @@ func Build(parser *argparse.Parser) (*Args, error) {
 	}
 
 	var method string
-	var url, data *string
-	var header, fdata *[]string
+	var url *string
+	var data, header *[]string
 	if get.Happened() {
 		method = "GET"
 		url = getUrl
@@ -73,17 +73,17 @@ func Build(parser *argparse.Parser) (*Args, error) {
 		method = "POST"
 		url = postUrl
 		header = postHeaders
-		data = postData
+		data = postBody
 	} else if put.Happened() {
 		method = "PUT"
 		url = putUrl
 		header = putHeaders
-		data = putData
+		data = putBody
 	} else if del.Happened() {
 		method = "DELETE"
 		url = delUrl
 		header = delHeaders
-		data = delData
+		data = delBody
 	} else if head.Happened() {
 		method = "HEAD"
 		url = headUrl
@@ -92,7 +92,7 @@ func Build(parser *argparse.Parser) (*Args, error) {
 		method = "FORM"
 		url = formUrl
 		header = formHeaders
-		fdata = formData
+		data = formBody
 	}
 
 	if *parallel <= 0 {
@@ -106,9 +106,8 @@ func Build(parser *argparse.Parser) (*Args, error) {
 		Headers:  header,
 		Parallel: parallel,
 		Loop:     loop,
-		FormData: fdata,
-    Include: include,
-    Output:   output,
+		Include:  include,
+		Output:   output,
 	}
 
 	return &args, err
