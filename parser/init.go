@@ -15,6 +15,7 @@ type Args struct {
 	Loop     *bool
 	FormData *[]string
 	Include  *bool
+	Time     *bool
 	Output   *string
 }
 
@@ -54,6 +55,14 @@ func Build(parser *argparse.Parser) (*Args, error) {
 		&argparse.Options{
 			Required: false,
 			Help:     "Specify output file",
+		},
+	)
+	time := parser.Flag(
+		"t",
+		"time",
+		&argparse.Options{
+			Required: false,
+			Help:     "Print time taken for performing request(s)",
 		},
 	)
 
@@ -107,6 +116,7 @@ func Build(parser *argparse.Parser) (*Args, error) {
 		Parallel: parallel,
 		Loop:     loop,
 		Include:  include,
+		Time:     time,
 		Output:   output,
 	}
 

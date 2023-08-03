@@ -42,10 +42,11 @@ func Looped(
 			switch <-sig {
 			case syscall.SIGINT:
 				fmt.Printf(
-					"\nkeyboard interrup; exiting process.\n%v %vms\n",
-					"took: ",
-					time.Since(startTime).Milliseconds(),
+					"\nkeyboard interrup; exiting process.\n%v",
+					fmt.Sprintf("looped %v request(s) for %v iterations. (total = %v)\n",
+						*args.Parallel, iterCount, *args.Parallel*iterCount),
 				)
+				fmt.Println()
 				logging.HandleLogging(args, r, logger)
 				c <- nil
 				os.Exit(1)
@@ -59,9 +60,9 @@ func Looped(
 			wg.Add(1)
 			go method(i, c, client, args, wg, logger)
 		}
-		iterCount++
-		fmt.Printf("%v iteration(s) done\n", iterCount)
 		time.Sleep(1 * time.Second)
 		wg.Wait()
+		iterCount++
+		fmt.Printf("\r%v iteration(s) done", iterCount)
 	}
 }

@@ -29,11 +29,13 @@ func Single(args *parser.Args, logger *log.Logger) {
 	defer func() {
 		c <- nil
 		logging.HandleLogging(args, r, logger)
-		fmt.Printf(
-			"took %vms for %v requests.\n",
-			time.Since(startTime).Milliseconds(),
-			*args.Parallel,
-		)
+		if *args.Time {
+			fmt.Printf(
+				"took %vms for %v requests.\n",
+				time.Since(startTime).Milliseconds(),
+				*args.Parallel,
+			)
+		}
 	}()
 	go r.Consumer(c)
 	wg := new(sync.WaitGroup)
