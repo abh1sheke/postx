@@ -37,7 +37,7 @@ func HandleLogging(args *parser.Args, r *result.Result, logger *log.Logger) {
 			cwd, fmt.Sprintf("postx-out-%v.txt", time.Now().Format(time.RFC3339)))
 		fmt.Printf("postx: saving output to %v; (out > 100)\n", filename)
 		SaveToFile(&output, &filename, logger)
-	} else if len(*args.Output) > 0 {
+	} else if len(*args.Output) > 0 || *args.Loop {
 		SaveToFile(&output, args.Output, logger)
 	} else {
 		fmt.Println(output)
