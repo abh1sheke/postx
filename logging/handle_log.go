@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/abh1sheke/postx/colors"
 	"github.com/abh1sheke/postx/parser"
 	"github.com/abh1sheke/postx/result"
 )
@@ -40,6 +41,7 @@ func HandleLogging(args *parser.Args, r *result.Result, logger *log.Logger) {
 	} else if len(*args.Output) > 0 || *args.Loop {
 		SaveToFile(&output, args.Output, logger)
 	} else {
-		fmt.Println(output)
+		colorizedOut := colors.ColorizeOutput(&output)
+		fmt.Println(*colorizedOut)
 	}
 }
