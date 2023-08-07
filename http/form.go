@@ -28,7 +28,7 @@ func FormRequest(
 	var err error
 
 	form := url.Values{}
-	for _, v := range *args.FormData {
+	for _, v := range *args.Data {
 		values := strings.Split(v, "=")
 		form.Add(values[0], values[1])
 	}

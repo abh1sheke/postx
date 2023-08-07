@@ -21,7 +21,11 @@ func Single(args *parser.Args, logger *log.Logger) {
 	case "FORM":
 		method = lhttp.FormRequest
 	default:
-		method = lhttp.DefaultRequest
+		if args.Files != nil {
+			method = lhttp.MultipartRequest
+		} else {
+			method = lhttp.DefaultRequest
+		}
 	}
 
 	c := make(chan *result.Data)

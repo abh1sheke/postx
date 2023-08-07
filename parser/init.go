@@ -13,7 +13,7 @@ type Args struct {
 	Headers  *[]string
 	Parallel *int
 	Loop     *bool
-	FormData *[]string
+	Files    *[]string
 	Include  *bool
 	Time     *bool
 	Output   *string
@@ -22,7 +22,7 @@ type Args struct {
 func Build(parser *argparse.Parser) (*Args, error) {
 	get, getUrl, getHeaders := Get(parser)
 	head, headUrl, headHeaders := Head(parser)
-	post, postUrl, postHeaders, postBody := Post(parser)
+	post, postUrl, postHeaders, postBody, postFiles := Post(parser)
 	put, putUrl, putHeaders, putBody := Put(parser)
 	del, delUrl, delHeaders, delBody := Delete(parser)
 	form, formUrl, formHeaders, formBody := Form(parser)
@@ -73,7 +73,7 @@ func Build(parser *argparse.Parser) (*Args, error) {
 
 	var method string
 	var url *string
-	var data, header *[]string
+	var data, header, files *[]string
 	if get.Happened() {
 		method = "GET"
 		url = getUrl
@@ -83,6 +83,7 @@ func Build(parser *argparse.Parser) (*Args, error) {
 		url = postUrl
 		header = postHeaders
 		data = postBody
+		files = postFiles
 	} else if put.Happened() {
 		method = "PUT"
 		url = putUrl
@@ -112,6 +113,7 @@ func Build(parser *argparse.Parser) (*Args, error) {
 		Method:   &method,
 		URL:      url,
 		Data:     data,
+		Files:    files,
 		Headers:  header,
 		Parallel: parallel,
 		Loop:     loop,
