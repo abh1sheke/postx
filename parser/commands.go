@@ -57,7 +57,7 @@ func Head(parser *argparse.Parser) (
 }
 
 func Post(parser *argparse.Parser) (
-	*argparse.Command, *string, *[]string, *[]string,
+	*argparse.Command, *string, *[]string, *[]string, *[]string,
 ) {
 	command := parser.
 		NewCommand("post", "Perform a POST request")
@@ -88,8 +88,17 @@ func Post(parser *argparse.Parser) (
 			Validate: validateFields,
 		},
 	)
+	files := command.StringList(
+		"f",
+		"file",
+		&argparse.Options{
+			Required: false,
+			Help:     "field=filepath; Set POST file data",
+			Validate: validateFields,
+		},
+	)
 
-	return command, url, headers, data
+	return command, url, headers, data, files
 }
 
 func Put(parser *argparse.Parser) (
