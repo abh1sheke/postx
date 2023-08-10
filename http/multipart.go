@@ -84,7 +84,6 @@ func MultipartRequest(
 
 	request.Header.Set("User-Agent", "postx/0.1")
 	request.Header.Set("Content-type", writer.FormDataContentType())
-  fmt.Println(request.Header.Get("Content-type"))
 
 	for _, v := range *args.Headers {
 		values := strings.Split(v, "=")
