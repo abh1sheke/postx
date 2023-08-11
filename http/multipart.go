@@ -31,40 +31,48 @@ func MultipartRequest(
 
 	data := &bytes.Buffer{}
 	writer := multipart.NewWriter(data)
-
-	for _, v := range *args.Data {
-		f := strings.Index(v, "=")
-    key, value := v[0:f], v[f+1:]
-		writer.WriteField(key, value)
-	}
-
-	for _, v := range *args.Files {
-		f := strings.Index(v, "=")
-    key, path := v[0:f], v[f+1:]
-		file, err := os.Open(path)
-		if err != nil {
-			fmt.Printf("could not open file: %v;\n", path)
-			fmt.Println(`check logs by running "cat $TMPDIR/postx.log".`)
-			logger.Printf("could not open file: %v\n", err)
-			os.Exit(1)
+	localWg := new(sync.WaitGroup)
+	localWg.Add(2)
+	go func() {
+		defer localWg.Done()
+		for _, v := range *args.Data {
+			f := strings.Index(v, "=")
+			key, value := v[0:f], v[f+1:]
+			writer.WriteField(key, value)
 		}
-		defer file.Close()
+	}()
 
-		part, err := writer.CreateFormFile(key, filepath.Base(path))
-		if err != nil {
-			fmt.Printf("could not process file: %v;", path)
-			fmt.Println(`check logs by running "cat $TMPDIR/postx.log".`)
-			logger.Printf("could not process file: %v\n", err)
-			os.Exit(1)
+	go func() {
+		defer localWg.Done()
+		for _, v := range *args.Files {
+			f := strings.Index(v, "=")
+			key, path := v[0:f], v[f+1:]
+			file, err := os.Open(path)
+			if err != nil {
+				fmt.Printf("could not open file: %v;\n", path)
+				fmt.Println(`check logs by running "cat $TMPDIR/postx.log".`)
+				logger.Printf("could not open file: %v\n", err)
+				os.Exit(1)
+			}
+			defer file.Close()
+
+			part, err := writer.CreateFormFile(key, filepath.Base(path))
+			if err != nil {
+				fmt.Printf("could not process file: %v;", path)
+				fmt.Println(`check logs by running "cat $TMPDIR/postx.log".`)
+				logger.Printf("could not process file: %v\n", err)
+				os.Exit(1)
+			}
+			_, err = io.Copy(part, file)
+			if err != nil {
+				fmt.Printf("could not process file: %v;", path)
+				fmt.Println(`check logs by running "cat $TMPDIR/postx.log".`)
+				logger.Printf("could not process file: %v\n", err)
+				os.Exit(1)
+			}
 		}
-		_, err = io.Copy(part, file)
-		if err != nil {
-			fmt.Printf("could not process file: %v;", path)
-			fmt.Println(`check logs by running "cat $TMPDIR/postx.log".`)
-			logger.Printf("could not process file: %v\n", err)
-			os.Exit(1)
-		}
-	}
+	}()
+	localWg.Wait()
 
 	err = writer.Close()
 	if err != nil {
@@ -86,7 +94,7 @@ func MultipartRequest(
 	request.Header.Set("Content-type", writer.FormDataContentType())
 
 	for _, v := range *args.Headers {
-		f := strings.Index(v, "=")   
+		f := strings.Index(v, "=")
 		request.Header.Add(v[0:f], v[f+1:])
 	}
 	response, err = client.Do(request)
