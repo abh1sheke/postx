@@ -7,8 +7,8 @@ import (
 	"path"
 )
 
-func InitLogging() (*os.File, *log.Logger, error)  {
-	logFile := path.Join(os.TempDir(), fmt.Sprintf("postx.log"))
+func InitLogging() (*os.File, *log.Logger, error) {
+	logFile := path.Join(os.TempDir(), "postx.log")
 	f, err := os.OpenFile(
 		logFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644,
 	)
@@ -16,6 +16,6 @@ func InitLogging() (*os.File, *log.Logger, error)  {
 		return nil, nil, fmt.Errorf("could not initialise log file.\n")
 	}
 	LstdFlags := log.Ldate | log.Lshortfile
-    logger := log.New(f,"postx ", LstdFlags)
-    return f, logger, nil 
+	logger := log.New(f, "postx ", LstdFlags)
+	return f, logger, nil
 }
