@@ -28,7 +28,7 @@ func DefaultRequest(
 	if *args.Method == "GET" || *args.Method == "HEAD" {
 		request, err = http.NewRequest(*args.Method, *args.URL, nil)
 	} else {
-    data := extractData(args.Data)
+		data := extractData(args.Data)
 		request, err = http.NewRequest(*args.Method, *args.URL, data)
 	}
 
@@ -42,8 +42,8 @@ func DefaultRequest(
 	request.Header.Set("User-Agent", "postx/0.1")
 
 	for _, v := range *args.Headers {
-		values := strings.Split(v, "=")
-		request.Header.Add(values[0], values[1])
+		f := strings.Index(v, "=")
+		request.Header.Add(v[0:f], v[f+1:])
 	}
 	response, err = client.Do(request)
 	if err != nil {
