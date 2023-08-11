@@ -28,7 +28,7 @@ func DefaultRequest(
 	if *args.Method == "GET" || *args.Method == "HEAD" {
 		request, err = http.NewRequest(*args.Method, *args.URL, nil)
 	} else {
-		data := extractData(args.Data)
+		data := extractData(args)
 		request, err = http.NewRequest(*args.Method, *args.URL, data)
 	}
 
