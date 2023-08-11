@@ -1,16 +1,17 @@
 package http
 
 import (
-	"fmt"
 	"strings"
 )
 
-func extractData(d *[]string) *strings.Reader {
+func extractData(body *[]string) *strings.Reader {
 	data := "{"
-	for i, v := range *d {
-		split := strings.Split(v, "=")
-		data += fmt.Sprintf(`"%s":"%s"`, split[0], split[1])
-		if i < len(*d)-1 {
+	for i, v := range *body {
+		f := strings.IndexAny(v, "=")
+		key := v[0:f]
+		val := v[f+1:]
+		data += `"` + key + `":"` + val + `"`
+		if i < len(*body)-1 {
 			data += ","
 		}
 	}

@@ -33,14 +33,14 @@ func MultipartRequest(
 	writer := multipart.NewWriter(data)
 
 	for _, v := range *args.Data {
-		split := strings.Split(v, "=")
-		key, value := split[0], split[1]
+		f := strings.Index(v, "=")
+    key, value := v[0:f], v[f+1:]
 		writer.WriteField(key, value)
 	}
 
 	for _, v := range *args.Files {
-		split := strings.Split(v, "=")
-		key, path := split[0], split[1]
+		f := strings.Index(v, "=")
+    key, path := v[0:f], v[f+1:]
 		file, err := os.Open(path)
 		if err != nil {
 			fmt.Printf("could not open file: %v;\n", path)
@@ -86,8 +86,8 @@ func MultipartRequest(
 	request.Header.Set("Content-type", writer.FormDataContentType())
 
 	for _, v := range *args.Headers {
-		values := strings.Split(v, "=")
-		request.Header.Add(values[0], values[1])
+		f := strings.Index(v, "=")   
+		request.Header.Add(v[0:f], v[f+1:])
 	}
 	response, err = client.Do(request)
 	if err != nil {
