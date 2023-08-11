@@ -1,7 +1,6 @@
 package result
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 )
@@ -12,19 +11,19 @@ type Data struct {
 }
 
 func (r *Data) GetData() *string {
-	str := fmt.Sprintf("%v\n", string(*r.Body))
+	str := string(*r.Body) + "\n"
 	return &str
 }
 
 func (r *Data) GetResponse() *string {
 	res := r.Response
-	resToStr := fmt.Sprintf("%s %s\n", res.Proto, res.Status)
+	resToStr := res.Proto + " " + res.Status + "\n"
 	for i, v := range res.Header {
 		var val = v[0]
 		if len(v) > 1 {
-			val = strings.Join(v, ",")
+			val = strings.Join(v, ", ")
 		}
-		resToStr += fmt.Sprintf("%v: %v\n", i, val)
+		resToStr += i + ": " + val + "\n"
 	}
 	resToStr += "\n"
 	return &resToStr
