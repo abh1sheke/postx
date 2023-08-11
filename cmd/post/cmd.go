@@ -12,7 +12,7 @@ import (
 )
 
 var url string
-var headers, body, files []string
+var headers, body, files, numerical []string
 var parallel int
 var loop bool
 
@@ -59,6 +59,7 @@ func init() {
 	PostCmd.Flags().BoolVarP(&loop, "loop", "l", false, "loop over n requests")
 
 	PostCmd.Flags().StringSliceVarP(&body, "body", "b", []string{}, "key=value; specify request body values")
+	PostCmd.Flags().StringSliceVarP(&numerical, "numerical", "n", []string{}, "key=value; specify request body (numerical) values")
 
 	PostCmd.Flags().StringSliceVarP(&files, "file", "f", []string{}, "key=filepath; specify multipart request files")
 
