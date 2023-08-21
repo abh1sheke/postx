@@ -29,8 +29,8 @@ func FormRequest(
 
 	form := url.Values{}
 	for _, v := range *args.Data {
-		values := strings.Split(v, "=")
-		form.Add(values[0], values[1])
+		f := strings.Index(v, "=")
+		form.Add(v[0:f], v[f+1:])
 	}
 	request, err = http.NewRequest("POST", *args.URL, strings.NewReader(form.Encode()))
 
