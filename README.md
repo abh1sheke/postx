@@ -11,27 +11,25 @@ Postx helps you test your API endpoints by helping you perform N requests simult
 ## Usage
 
 ```
-postx <Command> [-h|--help] [-p|--parallel <integer>] [-l|--loop]
-             [-i|--include] [-o|--output "<value>"]
+A fast and feature-rich alternative to cURL.
 
-             A CLI tool for transferring data over HTTP.
+Usage:
+  postx [command]
 
-Commands:
+Available Commands:
+  completion  Generate the autocompletion script for the specified shell
+  delete      Perform a DELETE request
+  get         Perform a GET request
+  head        Perform a HEAD request
+  help        Help about any command
+  post        Perform a POST request
+  put         Perform a PUT request
 
-  get     Perform a GET request
-  head    Perform a HEAD request
-  post    Perform a POST request
-  put     Perform a PUT request
-  delete  Perform a DELETE request
-  form    Submit a HTML form
-
-Arguments:
-
-  -h  --help      Print help information
-  -p  --parallel  number; Perform n requests in parallel
-  -l  --loop      Loop request forever (with a 1s timeout)
-  -i  --include   Include response headers in the output
-  -o  --output    Specify output file
+Flags:
+  -h, --help            help for postx
+  -i, --include         include request headers in output
+  -o, --output string   specify output file
+  -t, --time            show time taken to make requests
 ```
 
 ## Installation
