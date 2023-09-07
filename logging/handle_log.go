@@ -32,7 +32,7 @@ func HandleLogging(args *parser.Args, r *result.Result, logger *log.Logger) {
 		output += *extractOutput((*r.List)[0], args.Include)
 	}
 
-	if len(*r.List) > 100 && len(*args.Output) < 1 {
+	if len(*r.List) > 5 && len(*args.Output) < 1 {
 		cwd, _ := os.Getwd()
 		filename := filepath.Join(
 			cwd, "postx-out-"+time.Now().Format(time.RFC3339)+".txt")
