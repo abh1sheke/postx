@@ -26,7 +26,7 @@ var PutCmd = &cobra.Command{
 		}
 		defer f.Close()
 
-		method := "POST"
+		method := "PUT"
 		output := c.Parent().Flags().Lookup("output").Value.String()
 		include, _ := strconv.ParseBool(c.Parent().Flags().Lookup("include").Value.String())
 		benchTime, _ := strconv.ParseBool(c.Parent().Flags().Lookup("time").Value.String())

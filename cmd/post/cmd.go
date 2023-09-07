@@ -14,7 +14,7 @@ import (
 var url string
 var headers, body, files, numerical []string
 var parallel int
-var loop bool
+var loop, form bool
 
 var PostCmd = &cobra.Command{
 	Use:   "post",
@@ -27,6 +27,9 @@ var PostCmd = &cobra.Command{
 		defer f.Close()
 
 		method := "POST"
+		if form {
+			method = "FORM"
+		}
 		output := c.Parent().Flags().Lookup("output").Value.String()
 		include, _ := strconv.ParseBool(c.Parent().Flags().Lookup("include").Value.String())
 		benchTime, _ := strconv.ParseBool(c.Parent().Flags().Lookup("time").Value.String())
@@ -57,6 +60,7 @@ func init() {
 
 	PostCmd.Flags().IntVarP(&parallel, "parallel", "p", 1, "specify number of requests to make in parallel")
 	PostCmd.Flags().BoolVarP(&loop, "loop", "l", false, "loop over n requests")
+	PostCmd.Flags().BoolVarP(&form, "form", "F", false, "send form encoded data")
 
 	PostCmd.Flags().StringSliceVarP(&body, "body", "b", []string{}, "key=value; specify request body values")
 	PostCmd.Flags().StringSliceVarP(&numerical, "numerical", "n", []string{}, "key=value; specify request body (numerical) values")
