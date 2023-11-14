@@ -2,9 +2,7 @@ package http
 
 import (
 	"bytes"
-	"fmt"
 	"io"
-	"log"
 	"mime/multipart"
 	"net/http"
 	"os"
@@ -12,6 +10,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/abh1sheke/postx/logging"
 	"github.com/abh1sheke/postx/parser"
 	"github.com/abh1sheke/postx/result"
 )
@@ -22,7 +21,6 @@ func MultipartRequest(
 	client *http.Client,
 	args *parser.Args,
 	wg *sync.WaitGroup,
-	logger *log.Logger,
 ) {
 	defer wg.Done()
 	var request *http.Request
@@ -49,26 +47,27 @@ func MultipartRequest(
 			key, path := v[0:f], v[f+1:]
 			file, err := os.Open(path)
 			if err != nil {
-				fmt.Printf("could not open file: %v;\n", path)
-				fmt.Println(`check logs by running "cat $TMPDIR/postx.log".`)
-				logger.Printf("could not open file: %v\n", err)
-				os.Exit(1)
+				logging.EFatalf(
+					"Error: could not open file '%s'.\nReason: %s",
+          path,
+					err.Error(),
+				)
 			}
 			defer file.Close()
 
 			part, err := writer.CreateFormFile(key, filepath.Base(path))
 			if err != nil {
-				fmt.Printf("could not process file: %v;", path)
-				fmt.Println(`check logs by running "cat $TMPDIR/postx.log".`)
-				logger.Printf("could not process file: %v\n", err)
-				os.Exit(1)
+				logging.EFatalf(
+					"Error: could not create form file.\nReason: %s",
+					err.Error(),
+				)
 			}
 			_, err = io.Copy(part, file)
 			if err != nil {
-				fmt.Printf("could not process file: %v;", path)
-				fmt.Println(`check logs by running "cat $TMPDIR/postx.log".`)
-				logger.Printf("could not process file: %v\n", err)
-				os.Exit(1)
+				logging.EFatalf(
+					"Error: failed to copy form file.\nReason: %s",
+					err.Error(),
+				)
 			}
 		}
 	}()
@@ -76,18 +75,18 @@ func MultipartRequest(
 
 	err = writer.Close()
 	if err != nil {
-		fmt.Println("could not close multipart writer;")
-		fmt.Println(`check logs by running "cat $TMPDIR/postx.log".`)
-		logger.Printf("could not close multipart writer: %v\n", err)
-		os.Exit(1)
+		logging.EFatalf(
+			"Error: failed to close file writer.\nReason: %s",
+			err.Error(),
+		)
 	}
 	request, err = http.NewRequest(*args.Method, *args.URL, data)
 
 	if err != nil {
-		fmt.Println("could not create http request;")
-		fmt.Println(`check logs by running "cat $TMPDIR/postx.log".`)
-		logger.Printf("could not create http request: %v\n", err)
-		os.Exit(1)
+		logging.EFatalf(
+			"Error: could not create http request.\nReason: %s",
+			err.Error(),
+		)
 	}
 
 	request.Header.Set("User-Agent", "postx/0.1")
@@ -99,17 +98,18 @@ func MultipartRequest(
 	}
 	response, err = client.Do(request)
 	if err != nil {
-		fmt.Println("could not perform http request;")
-		fmt.Println(`check logs by running "cat $TMPDIR/postx.log".`)
-		logger.Printf("could not perform http request: %v\n", err)
-		os.Exit(1)
+		logging.EFatalf(
+			"Error: could not perform http request.\nReason: %s",
+			err.Error(),
+		)
 	}
 	var body []byte
 	body, err = io.ReadAll(response.Body)
 	if err != nil {
-		fmt.Println("could not read response body.")
-		fmt.Println(`check logs by running "cat $TMPDIR/postx.log".`)
-		logger.Printf("could not perform http request: %v\n", err)
+		logging.EFatalf(
+			"Error: could not read response body.\nReason: %s",
+			err.Error(),
+		)
 	} else {
 		c <- &result.Data{Body: &body, Response: response}
 	}

@@ -1,11 +1,9 @@
 package post
 
 import (
-	"fmt"
 	"strconv"
 	"time"
 
-	"github.com/abh1sheke/postx/logging"
 	"github.com/abh1sheke/postx/parser"
 	"github.com/abh1sheke/postx/runners"
 	"github.com/spf13/cobra"
@@ -20,12 +18,6 @@ var PostCmd = &cobra.Command{
 	Use:   "post",
 	Short: "Perform a POST request",
 	Run: func(c *cobra.Command, a []string) {
-		f, logger, err := logging.InitLogging()
-		if err != nil {
-			fmt.Printf("Error: %s\n", err)
-		}
-		defer f.Close()
-
 		method := "POST"
 		if form {
 			method = "FORM"
@@ -47,9 +39,9 @@ var PostCmd = &cobra.Command{
 		}
 		if loop {
 			startTime := time.Now()
-			runners.Looped(&args, startTime, logger)
+			runners.Looped(&args, startTime)
 		} else {
-			runners.Single(&args, logger)
+			runners.Single(&args)
 		}
 	},
 }

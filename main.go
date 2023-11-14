@@ -1,14 +1,12 @@
 package main
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/abh1sheke/postx/cmd"
+	"github.com/abh1sheke/postx/logging"
 )
 
 func main() {
 	if err := cmd.Execute(); err != nil {
-		fmt.Fprintln(os.Stderr, fmt.Sprintf("Error: %s", err.Error()))
+		logging.EPrintln("Error: %s", err.Error())
 	}
 }

@@ -1,14 +1,12 @@
 package http
 
 import (
-	"fmt"
 	"io"
-	"log"
 	"net/http"
-	"os"
 	"strings"
 	"sync"
 
+	"github.com/abh1sheke/postx/logging"
 	"github.com/abh1sheke/postx/parser"
 	"github.com/abh1sheke/postx/result"
 )
@@ -19,7 +17,6 @@ func DefaultRequest(
 	client *http.Client,
 	args *parser.Args,
 	wg *sync.WaitGroup,
-	logger *log.Logger,
 ) {
 	defer wg.Done()
 	var request *http.Request
@@ -33,10 +30,10 @@ func DefaultRequest(
 	}
 
 	if err != nil {
-		fmt.Println("could not create http request;")
-		fmt.Println(`check logs by running "cat $TMPDIR/postx.log".`)
-		logger.Printf("could not create http request: %v\n", err)
-		os.Exit(1)
+		logging.EFatalf(
+			"Error: could not create http request.\nReason: %s",
+			err.Error(),
+		)
 	}
 
 	request.Header.Set("User-Agent", "postx/0.1")
@@ -47,17 +44,18 @@ func DefaultRequest(
 	}
 	response, err = client.Do(request)
 	if err != nil {
-		fmt.Println("could not perform http request;")
-		fmt.Println(`check logs by running "cat $TMPDIR/postx.log".`)
-		logger.Printf("could not perform http request: %v\n", err)
-		os.Exit(1)
+		logging.EFatalf(
+			"Error: could not perform http request.\nReason: %s",
+			err.Error(),
+		)
 	}
 	var body []byte
 	body, err = io.ReadAll(response.Body)
 	if err != nil {
-		fmt.Println("could not read response body.")
-		fmt.Println(`check logs by running "cat $TMPDIR/postx.log".`)
-		logger.Printf("could not perform http request: %v\n", err)
+		logging.EFatalf(
+			"Error: could not read response body.\nReason: %s",
+			err.Error(),
+		)
 	} else {
 		c <- &result.Data{Body: &body, Response: response}
 	}

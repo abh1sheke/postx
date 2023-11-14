@@ -2,7 +2,6 @@ package runners
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -16,11 +15,7 @@ import (
 	"github.com/abh1sheke/postx/result"
 )
 
-func Looped(
-	args *parser.Args,
-	startTime time.Time,
-	logger *log.Logger,
-) {
+func Looped(args *parser.Args, startTime time.Time) {
 	r := result.InitResultList(uint(*args.Parallel))
 	wg := new(sync.WaitGroup)
 	client := new(http.Client)
@@ -47,7 +42,7 @@ func Looped(
 						*args.Parallel, iterCount, *args.Parallel*iterCount),
 				)
 				fmt.Println()
-				logging.HandleLogging(args, r, logger)
+				logging.SaveOutput(args, r)
 				c <- nil
 				os.Exit(1)
 			}
@@ -58,7 +53,7 @@ func Looped(
 	for {
 		for i := 1; i <= *args.Parallel; i++ {
 			wg.Add(1)
-			go method(i, c, client, args, wg, logger)
+			go method(i, c, client, args, wg)
 		}
 		time.Sleep(1 * time.Second)
 		wg.Wait()

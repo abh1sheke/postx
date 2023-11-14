@@ -1,7 +1,6 @@
 package runners
 
 import (
-	"log"
 	"net/http"
 	"sync"
 
@@ -15,5 +14,4 @@ type RequestFunc = func(
 	client *http.Client,
 	args *parser.Args,
 	wg *sync.WaitGroup,
-	logger *log.Logger,
 )

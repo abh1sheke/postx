@@ -2,7 +2,6 @@ package runners
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"sync"
 	"time"
@@ -13,7 +12,7 @@ import (
 	"github.com/abh1sheke/postx/result"
 )
 
-func Single(args *parser.Args, logger *log.Logger) {
+func Single(args *parser.Args) {
 	r := result.InitResultList(uint(*args.Parallel))
 	var method RequestFunc
 
@@ -32,7 +31,7 @@ func Single(args *parser.Args, logger *log.Logger) {
 	startTime := time.Now()
 	defer func() {
 		c <- nil
-		logging.HandleLogging(args, r, logger)
+		logging.SaveOutput(args, r)
 		if *args.Time {
 			fmt.Printf(
 				"took %vms for %v requests.\n",
@@ -46,7 +45,7 @@ func Single(args *parser.Args, logger *log.Logger) {
 	client := new(http.Client)
 	for i := 1; i <= *args.Parallel; i++ {
 		wg.Add(1)
-		go method(i, c, client, args, wg, logger)
+		go method(i, c, client, args, wg)
 	}
 	wg.Wait()
 }
