@@ -7,6 +7,6 @@ import (
 
 func main() {
 	if err := cmd.Execute(); err != nil {
-		logging.EPrintln("Error: %s", err.Error())
+		logging.EPrintf("Error: %s", err.Error())
 	}
 }
