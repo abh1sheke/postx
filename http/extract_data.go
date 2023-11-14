@@ -34,7 +34,7 @@ func extractNumericalData(body *[]string, c chan *string, wg *sync.WaitGroup) {
 }
 
 func extractData(args *parser.Args) *strings.Reader {
-  wg := new(sync.WaitGroup)
+	wg := new(sync.WaitGroup)
 	data := make(chan *string)
 	var max int
 	if args.Data != nil && args.Numerical != nil {

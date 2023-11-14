@@ -1,11 +1,9 @@
 package del
 
 import (
-	"fmt"
 	"strconv"
 	"time"
 
-	"github.com/abh1sheke/postx/logging"
 	"github.com/abh1sheke/postx/parser"
 	"github.com/abh1sheke/postx/runners"
 	"github.com/spf13/cobra"
@@ -19,12 +17,6 @@ var DeleteCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "Perform a DELETE request",
 	Run: func(c *cobra.Command, a []string) {
-		f, logger, err := logging.InitLogging()
-		if err != nil {
-			fmt.Printf("Error: %s\n", err)
-		}
-		defer f.Close()
-
 		method := "HEAD"
 		output := c.Parent().Flags().Lookup("output").Value.String()
 		include, _ := strconv.ParseBool(c.Parent().Flags().Lookup("include").Value.String())
@@ -41,9 +33,9 @@ var DeleteCmd = &cobra.Command{
 		}
 		if loop {
 			startTime := time.Now()
-			runners.Looped(&args, startTime, logger)
+			runners.Looped(&args, startTime) 
 		} else {
-			runners.Single(&args, logger)
+			runners.Single(&args)
 		}
 	},
 }
