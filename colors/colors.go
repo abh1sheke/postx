@@ -1,26 +1,22 @@
 package colors
 
-type Colors struct {
-	Reset   []byte
-	Red     []byte
-	Green   []byte
-	Yellow  []byte
-	Blue    []byte
-	Magenta []byte
-	Cyan    []byte
-	White   []byte
-}
+import (
+	"fmt"
+)
 
+type Color uint8
 
-func InitColours() *Colors {
-	return &Colors{
-		Reset:   []byte("\033[0m"),
-		Red:     []byte("\033[31m"),
-		Green:   []byte("\033[32m"),
-		Yellow:  []byte("\033[33m"),
-		Blue:    []byte("\033[34m"),
-		Magenta: []byte("\033[35m"),
-		Cyan:    []byte("\033[36m"),
-		White:   []byte("\033[37m"),
-	}
+const (
+	Reset Color = 0
+	Red   Color = iota + 30
+	Green
+	Yellow
+	Blue
+	Magenta
+	Cyan
+	White
+)
+
+func (c Color) toBytes() []byte {
+	return []byte(fmt.Sprintf("\033[%vm", c))
 }

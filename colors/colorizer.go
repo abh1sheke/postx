@@ -8,7 +8,7 @@ import (
 
 type Colorizer struct {
 	Pattern *regexp.Regexp
-	Color   *[]byte
+	Color   Color
 }
 
 func insertColor(src *[]byte, color *[]byte, index int) {
@@ -29,7 +29,7 @@ func insertColor(src *[]byte, color *[]byte, index int) {
 
 func colorize(src *[]byte, colorizers *[]*Colorizer) {
 	startLen := len(*src)
-	rest := []byte("\033[0m")
+	reset := Reset.toBytes()
 	for _, colorizer := range *colorizers {
 		pattern, color := colorizer.Pattern, colorizer.Color
 		matchIdx := pattern.FindAllIndex(*src, -1)
@@ -37,21 +37,21 @@ func colorize(src *[]byte, colorizers *[]*Colorizer) {
 			currentLen := len(*src)
 			offset := currentLen - startLen
 			start, end := indices[0], indices[1]
-			insertColor(src, color, start+offset)
-			offset += len(*color)
-			insertColor(src, &rest, end+offset)
+			colorb := color.toBytes()
+			insertColor(src, &colorb, start+offset)
+			offset += len(colorb)
+			insertColor(src, &reset, end+offset)
 		}
 		startLen = len(*src)
 	}
 }
 
 func ColorizeOutput(src *string) *string {
-	colors := InitColours()
-	protocol := Colorizer{Pattern: regexp.MustCompile(`HTTP/[\d\.]+`), Color: &colors.Blue}
-	headerKeys := Colorizer{Pattern: regexp.MustCompile(`[\w\-]+:\ `), Color: &colors.Yellow}
-	clientErr := Colorizer{Pattern: regexp.MustCompile(`4[\d]{2}\ [\w\ ]+`), Color: &colors.Red}
-	serverErr := Colorizer{Pattern: regexp.MustCompile(`5[\d]{2}\ [\w\ ]+`), Color: &colors.Red}
-	ok := Colorizer{Pattern: regexp.MustCompile(`2[\d]{2}\ [\w\ ]+`), Color: &colors.Cyan}
+	protocol := Colorizer{Pattern: regexp.MustCompile(`HTTP/[\d\.]+`), Color: Blue}
+	headerKeys := Colorizer{Pattern: regexp.MustCompile(`[\w\-]+:\ `), Color: Yellow}
+	clientErr := Colorizer{Pattern: regexp.MustCompile(`4[\d]{2}\ [\w\ ]+`), Color: Red}
+	serverErr := Colorizer{Pattern: regexp.MustCompile(`5[\d]{2}\ [\w\ ]+`), Color: Red}
+	ok := Colorizer{Pattern: regexp.MustCompile(`2[\d]{2}\ [\w\ ]+`), Color: Cyan}
 
 	colorizers := []*Colorizer{&protocol, &headerKeys, &clientErr, &serverErr, &ok}
 	bytes, _ := io.ReadAll(strings.NewReader(*src))
