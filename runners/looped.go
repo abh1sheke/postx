@@ -16,13 +16,13 @@ import (
 )
 
 func Looped(args *parser.Args, startTime time.Time) {
-	r := result.InitResultList(uint(*args.Parallel))
+	r := result.InitResultList(uint(args.Parallel))
 	wg := new(sync.WaitGroup)
 	client := new(http.Client)
 	iterCount := 0
 
 	var method RequestFunc
-	switch *args.Method {
+	switch args.Method {
 	case "FORM":
 		method = lhttp.FormRequest
 	default:
@@ -39,7 +39,7 @@ func Looped(args *parser.Args, startTime time.Time) {
 				fmt.Printf(
 					"\nkeyboard interrup; exiting process.\n%v",
 					fmt.Sprintf("looped %v request(s) for %v iterations. (total = %v)\n",
-						*args.Parallel, iterCount, *args.Parallel*iterCount),
+						args.Parallel, iterCount, args.Parallel*iterCount),
 				)
 				fmt.Println()
 				logging.SaveOutput(args, r)
@@ -51,7 +51,7 @@ func Looped(args *parser.Args, startTime time.Time) {
 
 	go r.Consumer(c)
 	for {
-		for i := 1; i <= *args.Parallel; i++ {
+		for i := 1; i <= args.Parallel; i++ {
 			wg.Add(1)
 			go method(i, c, client, args, wg)
 		}

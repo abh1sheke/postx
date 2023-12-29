@@ -25,11 +25,11 @@ func FormRequest(
 	var err error
 
 	form := url.Values{}
-	for _, v := range *args.Data {
+	for _, v := range args.Data {
 		f := strings.Index(v, "=")
 		form.Add(v[0:f], v[f+1:])
 	}
-	request, err = http.NewRequest("POST", *args.URL, strings.NewReader(form.Encode()))
+	request, err = http.NewRequest("POST", args.URL, strings.NewReader(form.Encode()))
 	if err != nil {
 		logging.EFatalf(
 			"Error: could not create http request.\nReason: %s",
@@ -40,7 +40,7 @@ func FormRequest(
 	request.Header.Set("User-Agent", "postx/0.1")
 
 	request.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-	for _, v := range *args.Headers {
+	for _, v := range args.Headers {
 		values := strings.Split(v, "=")
 		request.Header.Add(values[0], values[1])
 	}
@@ -60,6 +60,6 @@ func FormRequest(
 			err.Error(),
 		)
 	} else {
-		c <- &result.Data{Body: &body, Response: response}
+		c <- &result.Data{Body: body, Response: response}
 	}
 }
