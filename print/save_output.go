@@ -1,4 +1,4 @@
-package logging
+package print 
 
 import (
 	"fmt"
@@ -54,7 +54,7 @@ func writeFile(r string, outfile string) {
 		outfile, []byte(r), 0644,
 	)
 	if err != nil {
-		EFatalf("Error: could not write to outfile.\nReason: %s", err.Error())
+		Efatalf("Error: could not write to outfile.\nReason: %s", err.Error())
 	}
 	fmt.Printf("postx: wrote outfile to %v.\n", path.Base(outfile))
 }
