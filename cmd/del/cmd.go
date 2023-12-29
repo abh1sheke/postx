@@ -22,18 +22,18 @@ var DeleteCmd = &cobra.Command{
 		include, _ := strconv.ParseBool(c.Parent().Flags().Lookup("include").Value.String())
 		benchTime, _ := strconv.ParseBool(c.Parent().Flags().Lookup("time").Value.String())
 		args := parser.Args{
-			Output:   &output,
-			Include:  &include,
-			Time:     &benchTime,
-			URL:      &url,
-			Method:   &method,
-			Parallel: &parallel,
-			Loop:     &loop,
-			Headers:  &headers,
+			Output:   output,
+			Include:  include,
+			Time:     benchTime,
+			URL:      url,
+			Method:   method,
+			Parallel: parallel,
+			Loop:     loop,
+			Headers:  headers,
 		}
 		if loop {
 			startTime := time.Now()
-			runners.Looped(&args, startTime) 
+			runners.Looped(&args, startTime)
 		} else {
 			runners.Single(&args)
 		}

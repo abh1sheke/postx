@@ -22,11 +22,11 @@ func DefaultRequest(
 	var request *http.Request
 	var response *http.Response
 	var err error
-	if *args.Method == "GET" || *args.Method == "HEAD" {
-		request, err = http.NewRequest(*args.Method, *args.URL, nil)
+	if args.Method == "GET" || args.Method == "HEAD" {
+		request, err = http.NewRequest(args.Method, args.URL, nil)
 	} else {
 		data := extractData(args)
-		request, err = http.NewRequest(*args.Method, *args.URL, data)
+		request, err = http.NewRequest(args.Method, args.URL, data)
 	}
 
 	if err != nil {
@@ -38,7 +38,7 @@ func DefaultRequest(
 
 	request.Header.Set("User-Agent", "postx/0.1")
 
-	for _, v := range *args.Headers {
+	for _, v := range args.Headers {
 		f := strings.Index(v, "=")
 		request.Header.Add(v[0:f], v[f+1:])
 	}
@@ -57,6 +57,6 @@ func DefaultRequest(
 			err.Error(),
 		)
 	} else {
-		c <- &result.Data{Body: &body, Response: response}
+		c <- &result.Data{Body: body, Response: response}
 	}
 }

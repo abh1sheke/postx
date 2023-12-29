@@ -33,7 +33,7 @@ func MultipartRequest(
 	localWg.Add(2)
 	go func() {
 		defer localWg.Done()
-		for _, v := range *args.Data {
+		for _, v := range args.Data {
 			f := strings.Index(v, "=")
 			key, value := v[0:f], v[f+1:]
 			writer.WriteField(key, value)
@@ -42,14 +42,14 @@ func MultipartRequest(
 
 	go func() {
 		defer localWg.Done()
-		for _, v := range *args.Files {
+		for _, v := range args.Files {
 			f := strings.Index(v, "=")
 			key, path := v[0:f], v[f+1:]
 			file, err := os.Open(path)
 			if err != nil {
 				logging.EFatalf(
 					"Error: could not open file '%s'.\nReason: %s",
-          path,
+					path,
 					err.Error(),
 				)
 			}
@@ -80,7 +80,7 @@ func MultipartRequest(
 			err.Error(),
 		)
 	}
-	request, err = http.NewRequest(*args.Method, *args.URL, data)
+	request, err = http.NewRequest(args.Method, args.URL, data)
 
 	if err != nil {
 		logging.EFatalf(
@@ -92,7 +92,7 @@ func MultipartRequest(
 	request.Header.Set("User-Agent", "postx/0.1")
 	request.Header.Set("Content-type", writer.FormDataContentType())
 
-	for _, v := range *args.Headers {
+	for _, v := range args.Headers {
 		f := strings.Index(v, "=")
 		request.Header.Add(v[0:f], v[f+1:])
 	}
@@ -111,6 +111,6 @@ func MultipartRequest(
 			err.Error(),
 		)
 	} else {
-		c <- &result.Data{Body: &body, Response: response}
+		c <- &result.Data{Body: body, Response: response}
 	}
 }

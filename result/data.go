@@ -6,12 +6,12 @@ import (
 )
 
 type Data struct {
-	Body     *[]byte        `json:"data"`
+	Body     []byte         `json:"data"`
 	Response *http.Response `json:"response"`
 }
 
 func (r *Data) GetData() *string {
-	str := string(*r.Body) + "\n"
+	str := string(r.Body) + "\n"
 	return &str
 }
 

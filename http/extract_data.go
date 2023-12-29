@@ -7,42 +7,42 @@ import (
 	"github.com/abh1sheke/postx/parser"
 )
 
-func extractStringData(body *[]string, c chan *string, wg *sync.WaitGroup) {
+func extractStringData(body []string, c chan string, wg *sync.WaitGroup) {
 	defer wg.Done()
 	if body != nil {
-		for _, v := range *body {
+		for _, v := range body {
 			f := strings.IndexAny(v, "=")
 			key := v[0:f]
 			val := v[f+1:]
 			data := `"` + key + `":"` + val + `"`
-			c <- &data
+			c <- data
 		}
 	}
 }
 
-func extractNumericalData(body *[]string, c chan *string, wg *sync.WaitGroup) {
+func extractNumericalData(body []string, c chan string, wg *sync.WaitGroup) {
 	defer wg.Done()
 	if body != nil {
-		for _, v := range *body {
+		for _, v := range body {
 			f := strings.IndexAny(v, "=")
 			key := v[0:f]
 			val := v[f+1:]
 			data := `"` + key + `":` + val
-			c <- &data
+			c <- data
 		}
 	}
 }
 
 func extractData(args *parser.Args) *strings.Reader {
 	wg := new(sync.WaitGroup)
-	data := make(chan *string)
+	data := make(chan string)
 	var max int
 	if args.Data != nil && args.Numerical != nil {
-		max = len(*args.Data) + len(*args.Numerical)
+		max = len(args.Data) + len(args.Numerical)
 	} else if args.Numerical == nil {
-		max = len(*args.Data)
+		max = len(args.Data)
 	} else {
-		max = len(*args.Numerical)
+		max = len(args.Numerical)
 	}
 	body := "{"
 	count := 0
@@ -51,7 +51,7 @@ func extractData(args *parser.Args) *strings.Reader {
 		for {
 			select {
 			case item := <-data:
-				body += *item
+				body += item
 				count++
 				if count == max {
 					body += "}"

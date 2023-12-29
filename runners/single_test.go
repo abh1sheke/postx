@@ -12,12 +12,12 @@ func BenchmarkSingle(t *testing.B) {
 	var output string = ""
 	var headers []string = []string{}
 	var args parser.Args = parser.Args{
-		Method:  &method,
-		URL:     &url,
-		Output:  &output,
-		Headers: &headers,
+		Method:  method,
+		URL:     url,
+		Output:  output,
+		Headers: headers,
 	}
-	args.Parallel = &t.N
+	args.Parallel = t.N
 
 	Single(&args)
 }

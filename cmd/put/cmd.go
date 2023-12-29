@@ -23,15 +23,15 @@ var PutCmd = &cobra.Command{
 		include, _ := strconv.ParseBool(c.Parent().Flags().Lookup("include").Value.String())
 		benchTime, _ := strconv.ParseBool(c.Parent().Flags().Lookup("time").Value.String())
 		args := parser.Args{
-			Output:   &output,
-			Include:  &include,
-			Time:     &benchTime,
-			URL:      &url,
-			Method:   &method,
-			Parallel: &parallel,
-			Loop:     &loop,
-			Headers:  &headers,
-			Data:     &body,
+			Output:   output,
+			Include:  include,
+			Time:     benchTime,
+			URL:      url,
+			Method:   method,
+			Parallel: parallel,
+			Loop:     loop,
+			Headers:  headers,
+			Data:     body,
 		}
 		if loop {
 			startTime := time.Now()
