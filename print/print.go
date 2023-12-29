@@ -1,4 +1,4 @@
-package print 
+package print
 
 // A module containing wrapper functions over fmt.Fprint and its derivatives
 
@@ -6,6 +6,18 @@ import (
 	"fmt"
 	"os"
 )
+
+func Print(a ...any) {
+	fmt.Fprint(os.Stdin, a...)
+}
+
+func Printf(s string, a ...any) {
+	fmt.Fprintf(os.Stdin, s, a...)
+}
+
+func Println(a ...any) {
+	fmt.Fprintln(os.Stdin, a...)
+}
 
 func Eprint(a ...any) {
 	fmt.Fprint(os.Stderr, a...)
