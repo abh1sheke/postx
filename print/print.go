@@ -8,15 +8,15 @@ import (
 )
 
 func Print(a ...any) {
-	fmt.Fprint(os.Stdin, a...)
+	fmt.Fprint(os.Stdout, a...)
 }
 
 func Printf(s string, a ...any) {
-	fmt.Fprintf(os.Stdin, s, a...)
+	fmt.Fprintf(os.Stdout, s, a...)
 }
 
 func Println(a ...any) {
-	fmt.Fprintln(os.Stdin, a...)
+	fmt.Fprintln(os.Stdout, a...)
 }
 
 func Eprint(a ...any) {
