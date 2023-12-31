@@ -2,12 +2,14 @@ package args
 
 import (
 	"strings"
+	"time"
 )
 
 type Args struct {
-	Method, Output, URL string
-	Data, Files         map[string]string
-	Multi, Include      bool
+	Method, Output, URL, Proxy string
+	Data, Files, Headers       map[string]string
+	Multi, Include             bool
+	Timeout                    time.Duration
 }
 
 func (a *Args) GetMethod() string {
