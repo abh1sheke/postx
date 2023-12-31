@@ -8,6 +8,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const VERSION = "0.1.0"
+
 var method, output, url, proxy string
 var files, data, headers []string
 var multi, include bool
@@ -57,6 +59,8 @@ func Execute() error {
 }
 
 func init() {
+  rootCmd.Version = VERSION
+
 	rootCmd.Flags().StringVarP(&method, "method", "m", "get", "specify http request method")
 	rootCmd.Flags().StringVarP(&output, "output", "o", "", "specify output file")
 	rootCmd.Flags().StringVarP(&url, "url", "u", "", "endpoint to which request is to be sent")
