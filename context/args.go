@@ -7,7 +7,7 @@ import (
 type Args struct {
 	Method, Output, URL string
 	Data, Files         map[string]string
-	Include             bool
+	Multi, Include      bool
 }
 
 func (a *Args) GetMethod() string {

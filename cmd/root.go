@@ -24,6 +24,9 @@ var rootCmd = &cobra.Command{
 		args := &context.Args{
 			Method: method, Output: output, URL: url, Data: _data, Files: _files, Include: include,
 		}
+		if len(_files) > 0 {
+			args.Multi = true
+		}
 		if err = args.Verify(); err != nil {
 			return err
 		}
@@ -41,7 +44,7 @@ func init() {
 	rootCmd.Flags().StringVarP(&output, "output", "o", "", "specify output file")
 	rootCmd.Flags().StringVarP(&url, "url", "u", "", "endpoint to which request is to be sent")
 	rootCmd.Flags().StringArrayVarP(&data, "data", "d", []string{}, "form data to be sent")
-	rootCmd.Flags().BoolVarP(&multi, "method", "m", false, "send request data as multipart/form")
+	rootCmd.Flags().BoolVar(&multi, "multi", false, "send request data as multipart/form")
 	rootCmd.Flags().StringArrayVarP(&files, "file", "f", []string{}, "path to files meant for sending")
 	rootCmd.Flags().BoolVarP(&include, "include", "i", false, "include request headers in output")
 
