@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/abh1sheke/postx/context"
+	"github.com/abh1sheke/postx/args"
 	"github.com/spf13/cobra"
 )
 
@@ -15,22 +15,21 @@ var rootCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, _ []string) error {
 		var _data, _files map[string]string
 		var err error
-		if _data, err = context.ParseKV(data, "data"); err != nil {
+		if _data, err = args.ParseKV(data, "data"); err != nil {
 			return err
 		}
-		if _files, err = context.ParseKV(files, "files"); err != nil {
+		if _files, err = args.ParseKV(files, "files"); err != nil {
 			return err
 		}
-		args := &context.Args{
+		a := &args.Args{
 			Method: method, Output: output, URL: url, Data: _data, Files: _files, Include: include,
 		}
 		if len(_files) > 0 {
-			args.Multi = true
+			a.Multi = true
 		}
-		if err = args.Verify(); err != nil {
+		if err = a.Verify(); err != nil {
 			return err
 		}
-		_ = context.New(args)
 		return nil
 	},
 }
