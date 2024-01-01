@@ -16,8 +16,11 @@ func main() {
 	if err != nil || args == nil {
 		return
 	}
-	_, err = client.Do(args)
+	res, err := client.Do(args)
 	if err != nil {
+		panic(err)
+	}
+	if err = print.Output(args.Output, args.Include, res); err != nil {
 		panic(err)
 	}
 }
