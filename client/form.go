@@ -38,7 +38,7 @@ func constructMutlipart(files, data map[string]string) (io.Reader, string, error
 }
 
 func contructURLEncoded(data map[string]string) (io.Reader, int, error) {
-	form := new(url.Values)
+	form := &url.Values{}
 	for k, v := range data {
 		form.Set(k, v)
 	}
