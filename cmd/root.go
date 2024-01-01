@@ -36,7 +36,7 @@ var rootCmd = &cobra.Command{
 		if timeout > 60 {
 			return fmt.Errorf("timeout value %q is too long", timeout)
 		}
-		a := &args.Args{
+		_ = &args.Args{
 			Method:  strings.ToUpper(method),
 			Output:  output,
 			URL:     url,
@@ -46,9 +46,7 @@ var rootCmd = &cobra.Command{
 			Include: include,
 			Proxy:   proxy,
 			Timeout: time.Duration(timeout) * time.Second,
-		}
-		if len(_files) > 0 {
-			a.Multi = true
+			Multi:   multi,
 		}
 		return nil
 	},
