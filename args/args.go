@@ -16,6 +16,7 @@ type Args struct {
 	Timeout                    time.Duration
 }
 
+// ParseKV converts a slice with data in the form of "$1=$2" into a map
 func ParseKV(data []string, _type string) (map[string]string, error) {
 	m := make(map[string]string)
 	for _, i := range data {
