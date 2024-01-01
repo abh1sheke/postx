@@ -9,7 +9,10 @@ import (
 )
 
 func includeStatus(buf *bytes.Buffer, res *http.Response) error {
-	status := strings.Join([]string{"\033[1m" + res.Proto, res.Request.Method, res.Status, "\033[0m", "\n"}, " ")
+	status := strings.Join(
+		[]string{"\033[1m" + res.Proto, res.Request.Method, res.Status, "\033[0m", "\n"},
+		" ",
+	)
 	if _, err := buf.WriteString(status); err != nil {
 		return err
 	}
