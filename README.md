@@ -8,12 +8,6 @@ Zing allows you to make HTTP requests right from the command-line. All HTTP meth
 ### Proxied requests
 Zing also allows you to route your requests through a proxy server.
 
-## Roadmap
-- [ ] Read and perform requests (concurrently) from a user-created file.
-- [ ] Perform FTP file uploads.
-- [ ] Perform SMTP operations
-- [ ] Allow users to benchmark backend server performance.
-
 ## Usage
 
 ```
@@ -36,3 +30,9 @@ Flags:
   -u, --url string            endpoint url
   -v, --version               version for zing
 ```
+
+## Roadmap
+- [ ] Read and perform requests (concurrently) from a user-created file.
+- [ ] Perform FTP file uploads.
+- [ ] Perform SMTP operations
+- [ ] Allow users to benchmark backend server performance.
