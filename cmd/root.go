@@ -70,7 +70,7 @@ func init() {
 	rootCmd.Flags().StringVarP(&proxy, "proxy", "p", "", "specify proxy url")
 	rootCmd.Flags().StringArrayVarP(&data, "data", "d", []string{}, "form data to be sent")
 	rootCmd.Flags().BoolVarP(&multi, "multipart", "M", false, "send request data as multipart/form")
-	rootCmd.Flags().StringArrayVarP(&files, "file", "f", []string{}, "path of files to send")
+	rootCmd.Flags().StringArrayVarP(&files, "file", "F", []string{}, "path of files to send")
 	rootCmd.Flags().StringArrayVarP(&headers, "headers", "H", []string{}, "set request headers")
 	rootCmd.Flags().Int64VarP(&timeout, "timeout", "t", 10, "request timeout (in seconds)")
 	rootCmd.Flags().BoolVarP(&include, "include", "i", false, "include request headers in output")
