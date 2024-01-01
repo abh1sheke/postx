@@ -63,15 +63,15 @@ func Execute() (*args.Args, error) {
 func init() {
 	rootCmd.Version = VERSION
 
-	rootCmd.Flags().StringVarP(&method, "method", "m", "get", "specify http request method")
+	rootCmd.Flags().StringVarP(&method, "method", "m", "get", "http request method")
 	rootCmd.Flags().StringVarP(&output, "output", "o", "", "specify output file")
-	rootCmd.Flags().StringVarP(&url, "url", "u", "", "endpoint to which request is to be sent")
-	rootCmd.Flags().StringVarP(&proxy, "proxy", "p", "", "specify proxy url")
-	rootCmd.Flags().StringArrayVarP(&data, "data", "d", []string{}, "form data to be sent")
-	rootCmd.Flags().BoolVarP(&multi, "multipart", "M", false, "send request data as multipart/form")
-	rootCmd.Flags().StringArrayVarP(&files, "file", "F", []string{}, "path of files to send")
-	rootCmd.Flags().StringArrayVarP(&headers, "headers", "H", []string{}, "set request headers")
-	rootCmd.Flags().Int64VarP(&timeout, "timeout", "t", 10, "request timeout (in seconds)")
+	rootCmd.Flags().StringVarP(&url, "url", "u", "", "endpoint url")
+	rootCmd.Flags().StringVarP(&proxy, "proxy", "p", "", "proxy url")
+	rootCmd.Flags().StringArrayVarP(&data, "data", "d", []string{}, "set http POST data (name=value)")
+	rootCmd.Flags().BoolVarP(&multi, "multipart", "M", false, "send request data as multipart/form-data")
+	rootCmd.Flags().StringArrayVarP(&files, "file", "F", []string{}, "set MIME multipart MIME file (name=data)")
+	rootCmd.Flags().StringArrayVarP(&headers, "headers", "H", []string{}, "set request headers (name=value)")
+	rootCmd.Flags().Int64VarP(&timeout, "timeout", "t", 10, "set request timeout (in seconds)")
 	rootCmd.Flags().BoolVarP(&include, "include", "i", false, "include request headers in output")
 
 	rootCmd.MarkFlagRequired("url")
