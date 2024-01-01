@@ -10,10 +10,10 @@ import (
 // Args holds all the necessary information to perfrom a HTTP request
 // as specified by the user
 type Args struct {
-	Method, Output, URL, Proxy string
-	Data, Files, Headers       map[string]string
-	Multi, Include             bool
-	Timeout                    time.Duration
+	Method, Output, URL, Proxy, Json string
+	Data, Files, Headers             map[string]string
+	Multi, Include                   bool
+	Timeout                          time.Duration
 }
 
 // ParseKV converts a slice with data in the form of "$1=$2" into a map

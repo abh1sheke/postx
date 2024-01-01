@@ -12,7 +12,7 @@ import (
 const VERSION = "0.1.0"
 
 var _args *args.Args
-var method, output, url, proxy string
+var method, output, url, proxy, json string
 var files, data, headers []string
 var multi, include bool
 var timeout int64
@@ -48,6 +48,7 @@ var rootCmd = &cobra.Command{
 			Proxy:   proxy,
 			Timeout: time.Duration(timeout) * time.Second,
 			Multi:   multi,
+			Json:    json,
 		}
 		return nil
 	},
@@ -67,8 +68,9 @@ func init() {
 	rootCmd.Flags().StringVarP(&output, "output", "o", "", "specify output file")
 	rootCmd.Flags().StringVarP(&url, "url", "u", "", "endpoint url")
 	rootCmd.Flags().StringVarP(&proxy, "proxy", "p", "", "proxy url")
-	rootCmd.Flags().StringArrayVarP(&data, "data", "d", []string{}, "set http POST data (name=value)")
+	rootCmd.Flags().StringVar(&json, "json", "", "http POST data as JSON")
 	rootCmd.Flags().BoolVarP(&multi, "multipart", "M", false, "send request data as multipart/form-data")
+	rootCmd.Flags().StringArrayVarP(&data, "data", "d", []string{}, "set http POST data (name=value)")
 	rootCmd.Flags().StringArrayVarP(&files, "file", "F", []string{}, "set MIME multipart MIME file (name=data)")
 	rootCmd.Flags().StringArrayVarP(&headers, "headers", "H", []string{}, "set request headers (name=value)")
 	rootCmd.Flags().Int64VarP(&timeout, "timeout", "t", 10, "set request timeout (in seconds)")

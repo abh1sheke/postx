@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"reflect"
 	"strconv"
+	"strings"
 
 	"github.com/abh1sheke/zing/args"
 )
@@ -18,6 +19,8 @@ func buildRequest(a *args.Args) (*http.Request, error) {
 		body, multipartHeader, err = constructMutlipart(a.Files, a.Data)
 	} else if len(a.Files) == 0 && len(a.Data) > 0 {
 		body, size, err = contructURLEncoded(a.Data)
+	} else if len(a.Json) > 0 {
+		body = strings.NewReader(a.Json)
 	}
 	if err != nil {
 		return nil, err
@@ -31,8 +34,12 @@ func buildRequest(a *args.Args) (*http.Request, error) {
 		case "*bytes.Buffer":
 			r.Header.Add("Content-Type", multipartHeader)
 		case "*strings.Reader":
-			r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-			r.Header.Add("Content-Length", strconv.Itoa(size))
+			if len(a.Json) > 0 {
+				r.Header.Add("Content-Type", "application/json")
+			} else {
+				r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
+				r.Header.Add("Content-Length", strconv.Itoa(size))
+			}
 		}
 	}
 	for k, v := range a.Headers {
