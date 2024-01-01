@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/abh1sheke/postx/args"
+	"github.com/abh1sheke/zing/args"
 	"github.com/spf13/cobra"
 )
 
@@ -18,7 +18,7 @@ var multi, include bool
 var timeout int64
 
 var rootCmd = &cobra.Command{
-	Use:   "postx",
+	Use:   "zing",
 	Short: "A fast and feature-rich alternative to cURL.",
 	// SilenceErrors: true,
 	// SilenceUsage:  true,

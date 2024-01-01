@@ -1,4 +1,4 @@
-module github.com/abh1sheke/postx
+module github.com/abh1sheke/zing
 
 go 1.20
 

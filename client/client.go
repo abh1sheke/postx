@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/abh1sheke/postx/args"
+	"github.com/abh1sheke/zing/args"
 )
 
 func newClient(a *args.Args) (*http.Client, error) {

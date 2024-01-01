@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/abh1sheke/postx/client"
-	"github.com/abh1sheke/postx/cmd"
-	"github.com/abh1sheke/postx/print"
+	"github.com/abh1sheke/zing/client"
+	"github.com/abh1sheke/zing/cmd"
+	"github.com/abh1sheke/zing/print"
 )
 
 func main() {
