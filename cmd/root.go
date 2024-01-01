@@ -50,9 +50,6 @@ var rootCmd = &cobra.Command{
 		if len(_files) > 0 {
 			a.Multi = true
 		}
-		if err = a.Verify(); err != nil {
-			return err
-		}
 		return nil
 	},
 }

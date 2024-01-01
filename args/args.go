@@ -1,7 +1,10 @@
 package args
 
 import (
+	"fmt"
+	"strings"
 	"time"
+	"unicode"
 )
 
 // Args holds all the necessary information to perfrom a HTTP request
@@ -13,12 +16,20 @@ type Args struct {
 	Timeout                    time.Duration
 }
 
-func (a *Args) Verify() error {
-	if err := verifyMethod(a.Method); err != nil {
-		return err
+func ParseKV(data []string, _type string) (map[string]string, error) {
+	m := make(map[string]string)
+	for _, i := range data {
+		i = strings.TrimFunc(i, unicode.IsSpace)
+		split := strings.Split(i, "=")
+		if len(split) != 2 {
+			return nil, fmt.Errorf("invalid value %q for %s; expected values in \"k=v\" form", i, _type)
+		}
+		k, v := split[0], split[1]
+		_, ok := m[k]
+		if ok {
+			return nil, fmt.Errorf("duplicate key/value pair %q received for %s", i, _type)
+		}
+		m[k] = v
 	}
-	if err := verifyURL(a.URL); err != nil {
-		return err
-	}
-	return nil
+	return m, nil
 }
