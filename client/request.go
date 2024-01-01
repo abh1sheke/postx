@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"strconv"
 
-	"github.com/abh1sheke/postx/args"
+	"github.com/abh1sheke/zing/args"
 )
 
 func buildRequest(a *args.Args) (*http.Request, error) {
