@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/abh1sheke/postx/args"
+	"github.com/abh1sheke/postx/client"
 	"github.com/spf13/cobra"
 )
 
@@ -36,7 +37,7 @@ var rootCmd = &cobra.Command{
 		if timeout > 60 {
 			return fmt.Errorf("timeout value %q is too long", timeout)
 		}
-		_ = &args.Args{
+		a := &args.Args{
 			Method:  strings.ToUpper(method),
 			Output:  output,
 			URL:     url,
@@ -47,6 +48,10 @@ var rootCmd = &cobra.Command{
 			Proxy:   proxy,
 			Timeout: time.Duration(timeout) * time.Second,
 			Multi:   multi,
+		}
+		_, err = client.Do(a)
+		if err != nil {
+			return err
 		}
 		return nil
 	},
