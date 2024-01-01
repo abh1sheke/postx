@@ -1,4 +1,4 @@
-package args 
+package args
 
 import (
 	"fmt"
@@ -10,11 +10,11 @@ import (
 
 func verifyMethod(method string) error {
 	valid := []string{
-		"get", "post", "patch", "put", "delete", "head", "trace", "connect", "options",
+		"GET", "POST", "PATCH", "PUT", "DELETE", "HEAD", "TRACE", "CONNECT", "OPTIONS",
 	}
 	method = strings.TrimFunc(method, unicode.IsSpace)
-	if !slices.Contains(valid, strings.ToLower(method)) {
-		return fmt.Errorf("invalid value %q received for %q", method, "--method")
+	if !slices.Contains(valid, strings.ToUpper(method)) {
+		return fmt.Errorf("invalid value %q received for flag %q", method, "method")
 	}
 	return nil
 }
@@ -22,7 +22,7 @@ func verifyMethod(method string) error {
 func verifyURL(_url string) error {
 	_, err := url.ParseRequestURI(_url)
 	if err != nil {
-		return fmt.Errorf("invalid value %q received for %q", _url, "--url")
+		return fmt.Errorf("invalid value %q received for flag %q", _url, "url")
 	}
 	return nil
 }
