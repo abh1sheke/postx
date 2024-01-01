@@ -15,10 +15,10 @@ type Args struct {
 
 func (a *Args) Verify() error {
 	if err := verifyMethod(a.Method); err != nil {
-		return err 
+		return err
 	}
 	if err := verifyURL(a.URL); err != nil {
-		return err 
+		return err
 	}
 	return nil
 }

@@ -17,10 +17,10 @@ var multi, include bool
 var timeout int64
 
 var rootCmd = &cobra.Command{
-	Use:   "postx",
-	Short: "A fast and feature-rich alternative to cURL.",
-  SilenceErrors: true,
-  SilenceUsage: true,
+	Use:           "postx",
+	Short:         "A fast and feature-rich alternative to cURL.",
+	SilenceErrors: true,
+	SilenceUsage:  true,
 	RunE: func(cmd *cobra.Command, _ []string) error {
 		var _data, _files, _headers map[string]string
 		var err error
@@ -62,7 +62,7 @@ func Execute() error {
 }
 
 func init() {
-  rootCmd.Version = VERSION
+	rootCmd.Version = VERSION
 
 	rootCmd.Flags().StringVarP(&method, "method", "m", "get", "specify http request method")
 	rootCmd.Flags().StringVarP(&output, "output", "o", "", "specify output file")
