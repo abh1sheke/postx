@@ -6,22 +6,22 @@ import (
 	"time"
 
 	"github.com/abh1sheke/postx/args"
-	"github.com/abh1sheke/postx/client"
 	"github.com/spf13/cobra"
 )
 
 const VERSION = "0.1.0"
 
+var _args *args.Args
 var method, output, url, proxy string
 var files, data, headers []string
 var multi, include bool
 var timeout int64
 
 var rootCmd = &cobra.Command{
-	Use:           "postx",
-	Short:         "A fast and feature-rich alternative to cURL.",
-	SilenceErrors: true,
-	SilenceUsage:  true,
+	Use:   "postx",
+	Short: "A fast and feature-rich alternative to cURL.",
+	// SilenceErrors: true,
+	// SilenceUsage:  true,
 	RunE: func(cmd *cobra.Command, _ []string) error {
 		var _data, _files, _headers map[string]string
 		var err error
@@ -37,7 +37,7 @@ var rootCmd = &cobra.Command{
 		if timeout > 60 {
 			return fmt.Errorf("timeout value %q is too long", timeout)
 		}
-		a := &args.Args{
+		_args = &args.Args{
 			Method:  strings.ToUpper(method),
 			Output:  output,
 			URL:     url,
@@ -49,16 +49,15 @@ var rootCmd = &cobra.Command{
 			Timeout: time.Duration(timeout) * time.Second,
 			Multi:   multi,
 		}
-		_, err = client.Do(a)
-		if err != nil {
-			return err
-		}
 		return nil
 	},
 }
 
-func Execute() error {
-	return rootCmd.Execute()
+func Execute() (*args.Args, error) {
+	if err := rootCmd.Execute(); err != nil {
+		return nil, err
+	}
+	return _args, nil
 }
 
 func init() {
