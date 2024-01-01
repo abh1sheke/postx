@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/abh1sheke/postx/args"
@@ -18,6 +19,8 @@ var timeout int64
 var rootCmd = &cobra.Command{
 	Use:   "postx",
 	Short: "A fast and feature-rich alternative to cURL.",
+  SilenceErrors: true,
+  SilenceUsage: true,
 	RunE: func(cmd *cobra.Command, _ []string) error {
 		var _data, _files, _headers map[string]string
 		var err error
@@ -34,7 +37,7 @@ var rootCmd = &cobra.Command{
 			return fmt.Errorf("timeout value %q is too long", timeout)
 		}
 		a := &args.Args{
-			Method:  method,
+			Method:  strings.ToUpper(method),
 			Output:  output,
 			URL:     url,
 			Data:    _data,
@@ -42,7 +45,7 @@ var rootCmd = &cobra.Command{
 			Headers: _headers,
 			Include: include,
 			Proxy:   proxy,
-			Timeout: time.Duration(timeout),
+			Timeout: time.Duration(timeout) * time.Second,
 		}
 		if len(_files) > 0 {
 			a.Multi = true
