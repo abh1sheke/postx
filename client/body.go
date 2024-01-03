@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"io"
 	"mime/multipart"
-	"net/url"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
@@ -12,19 +12,37 @@ import (
 	"github.com/abh1sheke/zing/args"
 )
 
-func constructBody(data *args.PostData, r *http.Request) {
+func constructBody(data *args.PostData, h http.Header) (io.Reader, error) {
 	var body io.Reader
+	var err error
+	if data == nil {
+		return nil, nil
+	}
 	switch data.Type {
-	case args.Plain | args.JSON:
+	case args.Plain:
 		body = strings.NewReader(data.Data)
+		h.Set("Content-type", "text/plain")
+	case args.JSON:
+		body = strings.NewReader(data.Data)
+		h.Set("Content-type", "application/json")
 	case args.URLForm:
 		body = strings.NewReader(data.Data)
+		if err != nil {
+			return nil, err
+		}
+		h.Set("Content-type", "application/x-www-form-urlencoded")
 	case args.Multipart:
-		body = strings.NewReader(data.Data)
+		var header string
+		body, header, err = constructMutlipart(data.FileMap, data.DataMap)
+		if err != nil {
+			return nil, err
+		}
+		h.Set("Content-type", header)
 	}
+	return body, nil
 }
 
-func constructMutlipart(files, data map[string]string) (io.Reader, string, error) {
+func constructMutlipart(files, data map[string]string) (*bytes.Buffer, string, error) {
 	body := new(bytes.Buffer)
 	writer := multipart.NewWriter(body)
 	for param, file := range files {
@@ -51,11 +69,12 @@ func constructMutlipart(files, data map[string]string) (io.Reader, string, error
 	return body, writer.FormDataContentType(), nil
 }
 
-func contructURLEncoded(data map[string]string) (io.Reader, int, error) {
-	form := &url.Values{}
-	for k, v := range data {
-		form.Set(k, v)
-	}
-	encoded := form.Encode()
-	return strings.NewReader(encoded), len(encoded), nil
-}
+// func contructURLEncoded(data map[string]string) (*strings.Reader, error) {
+// 	var encoded string
+// 	form := &url.Values{}
+// 	for k, v := range data {
+// 		form.Set(k, v)
+// 	}
+// 	encoded := form.Encode()
+// 	return strings.NewReader(encoded), nil
+// }
