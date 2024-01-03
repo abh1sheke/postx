@@ -10,25 +10,32 @@ import (
 // Args holds all the necessary information to perfrom a HTTP request
 // as specified by the user
 type Args struct {
-	Method, Output, URL, Proxy, Json string
-	Data, Files, Headers             map[string]string
-	Multi, Include                   bool
-	Timeout                          time.Duration
+	Method, Output, URL, Proxy, Agent string
+	Headers                           map[string]string
+	Multi, Include                    bool
+	Timeout                           time.Duration
+	Data                              *PostData
 }
 
-// ParseKV converts a slice with data in the form of "$1=$2" into a map
-func ParseKV(data []string, _type string) (map[string]string, error) {
+func trimWhitespace(s ...*string) {
+	for _, i := range s {
+		strings.TrimFunc(*i, unicode.IsSpace)
+	}
+}
+
+// ParseKV converts a slice with data in the form of "$1$delim$2" into a map
+func ParseKV(data []string, delim, _type string) (map[string]string, error) {
 	m := make(map[string]string)
 	for _, i := range data {
-		i = strings.TrimFunc(i, unicode.IsSpace)
-		split := strings.Split(i, "=")
+		split := strings.SplitN(i, delim, 2)
 		if len(split) != 2 {
-			return nil, fmt.Errorf("invalid value %q for %s; expected values in \"k=v\" form", i, _type)
+			return nil, fmt.Errorf("invalid value %q for %s; expected values in \"k%sv\" form", i, _type, delim)
 		}
 		k, v := split[0], split[1]
+		trimWhitespace(&k, &v)
 		_, ok := m[k]
 		if ok {
-			return nil, fmt.Errorf("duplicate key/value pair %q received for %s", i, _type)
+			fmt.Printf("warning: duplicate key/value pair %q received for %s\n", i, _type)
 		}
 		m[k] = v
 	}
