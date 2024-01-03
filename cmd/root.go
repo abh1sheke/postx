@@ -29,32 +29,26 @@ var rootCmd = &cobra.Command{
 		} else {
 			url = a[0]
 		}
-		var _data, _files, _headers map[string]string
-		var err error
-		if _data, err = args.ParseKV(data, "data"); err != nil {
-			return err
-		}
-		if _files, err = args.ParseKV(files, "files"); err != nil {
-			return err
-		}
-		if _headers, err = args.ParseKV(headers, "headers"); err != nil {
-			return err
-		}
 		if timeout > 60 {
 			return fmt.Errorf("timeout value %q is too long", timeout)
+		}
+		_headers, err := args.ParseKV(headers, ":", "headers")
+		if err != nil {
+			return err
 		}
 		_args = &args.Args{
 			Method:  strings.ToUpper(method),
 			Output:  output,
 			URL:     url,
-			Data:    _data,
-			Files:   _files,
-			Headers: _headers,
 			Include: include,
 			Proxy:   proxy,
 			Timeout: time.Duration(timeout) * time.Second,
 			Multi:   multi,
-			Json:    json,
+			Agent:   userAgent,
+			Headers: _headers,
+		}
+		if err := _args.Extract(dataText, json, files, data, dataForm, multi); err != nil {
+			return err
 		}
 		return nil
 	},
